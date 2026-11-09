@@ -1,56 +1,109 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="res/banner/dark_zh.svg">
-  <source media="(prefers-color-scheme: light)" srcset="res/banner/light_zh.svg">
-  <img alt="The preview for moodiary." src="res/banner/light_zh.svg">
-</picture>
-<p align="center">简体中文 | <a href="README.md">English</a></p>
+# Loong's Diary
 
-<p align="center"><a href="https://answer.moodiary.net" target="_blank">官方论坛</a>丨QQ群: <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=xGr0TNp_X1z3XEn09_iE_iGSLolQwl6Y&jump_from=webapi&authKey=ZmSb2oEd94FSXxBXRBq53hgTjjvcfmgkQrduB3uL12XtRylPmRlO2OdFz6R25tIo">760014526</a>丨Telegram: <a target="_blank" href="https://t.me/openmoodiary">openmoodiary</a></p>
+简体中文 | [English](README.md)
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.29.2-blue?style=for-the-badge">
-  <img src="https://img.shields.io/github/repo-size/ZhuJHua/moodiary?style=for-the-badge&color=ff7070">
-  <img src="https://img.shields.io/github/stars/ZhuJHua/moodiary?style=for-the-badge&color=965f8a">
-  <img src="https://img.shields.io/github/v/release/ZhuJHua/moodiary?style=for-the-badge&color=4f5e7f">
-  <img src="https://img.shields.io/github/license/ZhuJHua/moodiary?style=for-the-badge&color=4ac6b7">
-</div>
+这是 [Moodiary](https://github.com/ZhuJHua/moodiary) 的个人 fork。原项目由 [ZhuJHua](https://github.com/ZhuJHua) 与贡献者开发；本分支保留 Flutter、Rust、Isar 和 GetX 技术基础，围绕日常记录与数据可靠性继续调整。
 
+Android release 的应用名称为 **Loongs Diary**。Dart 包名和部分平台标识仍使用 `moodiary` / `Moodiary`，尚未完成全平台更名。当前源码版本为 `2.7.3+90`，[.fvmrc](.fvmrc) 固定 Flutter `3.32.0`。
 
+实现状态与验证范围见[当前开发状态](docs/DEVELOPMENT.md)，改动记录见 [CHANGELOG](CHANGELOG.md)。
 
-## ✨ 功能特性
+## 当前能力
 
-- **跨平台支持**：🌍 兼容 Android、iOS、Windows、MacOS、Linux\*。
-- **Material Design**：🎨 界面直观且用户友好，遵循 Material Design 设计规范。
-- **多种编辑器**：📝 支持 Markdown 、纯文本、富文本等多种形式的文本编辑。
-- **多媒体附件**：📷 可以为你的日记添加图片、音频、视频甚至画一张画。
-- **搜索和分类**：🔍 轻松通过全文搜索及分类管理你的日记。
-- **自定义主题**：🌈 支持浅色和深色模式，以及多种配色的主题。
-- **自定义字体**：✍️ 支持导入不同的字体，并支持可变字体。
-- **数据安全**：🔒 通过密码来保障你的日记安全，支持通过生物识别解锁。
-- **导出和分享**：🧾 支持所有数据的导入/导出，以及单篇日记的分享。
-- **备份与同步**：☁ 支持局域网同步，快速在设备间同步数据，以及 WebDav 备份。
-- **足迹地图**：🗺️ 在地图上查看你足迹，生活中的每一步都值得被记录。
-- **智能助手**：💬 支持接入第三方大模型，提供问答、情绪分析等功能。
-- **本地自然语言处理（NLP）**：🤖 更安全的智能助手，让你的日记更懂你。
+- 本地日记存储，提供纯文本、Markdown 和富文本编辑器；支持图片、音频、视频与绘画附件。
+- 搜索、分类、心情记录和统计；通过本地 Rust/Jieba 生成日记关键词等元数据。
+- 深浅主题、自定义配色和字体导入；支持密码解锁，以及设备支持的生物识别解锁。
+- 完整备份导入/导出、单篇日记分享、局域网传输与既有 WebDAV 同步实现。
+- 手选天气：**14 种预设、−30 至 50 °C**，无需天气 API Key。
+- 通过系统定位服务记录位置。系统地名反查可能需要网络；取得坐标后若地名反查失败，使用坐标作为位置名称。
 
-（注：跨平台能力由 Flutter 提供，带 * 号的平台可能需要更多测试）
+最近的数据可靠性改动恢复了关键词生成，并增加备份校验、暂存和捕获恢复异常后的回滚。**尚未实现强制终止或崩溃后的自动恢复。** 源码实现和自动检查并不代表所有平台都已验证可用，具体范围见开发状态文档。
 
-## 🔧 主要技术栈
+## 可选服务与实验代码
 
-- [Flutter](https://github.com/flutter/flutter)（跨平台 UI 框架）
-- [Isar](https://github.com/isar/isar)（高性能本地数据库）
-- [GetX](https://github.com/jonataslaw/getx)（状态管理框架）
+| 能力 | 当前状态与配置 |
+| --- | --- |
+| 天气 | 在编辑器中手动选择，当前流程无需和风天气凭据。 |
+| 足迹地图 | 使用在线地图瓦片，需要在“设置 → 实验室”配置[天地图](http://lbs.tianditu.gov.cn/server/MapService.html) Key。 |
+| 在线助手与心情分析 | 已有[腾讯混元](https://cloud.tencent.com/document/product/1729/97731) 接入代码；在“设置 → 实验室”配置腾讯云 ID 与 Key，调用时会向服务商发送对话内容或心情统计。 |
+| WebDAV | 在备份与同步设置中填写服务器、用户名和密码。应用目前使用 `lib/utils/webdav_util.dart`，新的 `lib/services/sync/` 替代实现尚未完成。 |
+| 本地 TensorFlow Lite 问答 | 保留实验源码，但模型初始化和推理已停用，目前不能作为离线助手使用。 |
+| Supabase、自建服务与 MinIO | Supabase 尚未接通，`server/` 仅为后端骨架，MinIO 未启用；这些均不是可用的云同步方案。 |
 
-## 📸 应用截图
+在线服务需要网络和有效的服务商配置。本次修订没有新增这些服务的端到端验证。
 
-> 应用持续更新中，新版本界面可能稍有变化
+## 平台与安装
+
+| 平台 | 仓库状态 |
+| --- | --- |
+| Android | 有应用工程；当前面向 ARM64（`arm64-v8a`），最低 Android 8.0 / API 26。Release 应用 ID 为 `cn.yooss.moodiary.loongs`。 |
+| iOS / macOS | 有应用工程，需要 Apple 工具链，并分别验证构建与设备运行。 |
+| Windows | 有应用工程，需要 Windows 桌面工具链，并分别验证构建与运行。 |
+| Linux / Web | 当前没有顶层应用工程。Rust 插件中的 Linux 目录不代表已支持 Linux 应用。 |
+
+如需安装包，请查看本 fork 的 [Releases](https://github.com/mygqdmmss/Loong-s-Diary/releases) 及其中标注的源码版本。本地构建记录和 APK 不代表已经发布 GitHub Release。当前数据可靠性改动尚未生成新 APK，也未进行真机验证。
+
+应用内的更新检查目前仍指向 **Moodiary 上游 Release**，尚未跟踪本 fork 的发布。
+
+## 从源码构建
+
+### 工具链
+
+- 使用 [.fvmrc](.fvmrc) 指定的 Flutter **3.32.0**；[pubspec.yaml](pubspec.yaml) 要求 Dart **3.8.0 或更新版本**。可用 FVM 管理版本，以下命令使用 `PATH` 中的 `flutter`。
+- 支持 Rust 2024 edition 的 Rust stable，以及目标平台的编译器和链接器。仓库工作流和 Cargokit 默认使用 stable，未固定 nightly 工具链。
+- Android：**JDK 21**、Android SDK Platform **36**、Build Tools **36.0.0**、NDK **28.0.13004108**。Android 所需 Clang/LLVM 由 NDK 提供。
+- Windows：安装包含“使用 C++ 的桌面开发”工作负载和 CMake 的 Visual Studio。iOS/macOS：使用 macOS、Xcode 和 CocoaPods。
+
+### 获取源码与依赖
+
+```sh
+git clone https://github.com/mygqdmmss/Loong-s-Diary.git
+cd Loong-s-Diary
+flutter --version
+flutter doctor -v
+flutter pub get
+```
+
+依赖解析需要联网，包括 `pubspec.yaml` 和 `rust/Cargo.toml` 中的 Git 依赖。
+
+### Android 配置
+
+构建前检查 [android/app/build.gradle](android/app/build.gradle)。其中 **release、debug、profile** 都引用自定义签名配置。请在 `android/app/key.jks` 提供自己的密钥库，在 `android/local.properties` 中设置 `storePassword`、`keyPassword`，并让配置中的别名（`key0`）与密钥一致；也可以按本地开发需求调整签名配置。保留 `local.properties` 中自动生成的 SDK 路径，不要把密钥库和密码提交到版本控制。
+
+仓库在 `android/app/src/main/jniLibs/arm64-v8a/libmoodiary_rust.so` 中包含预编译原生库，同时通过 `rust_builder/` 和 Cargokit 配置 Rust 构建。Cargokit 依赖 Flutter Gradle 插件识别，识别失败时会跳过集成。修改 Rust 后尤其需要检查构建日志与 APK 中的实际原生库：预编译库的存在并不代表它与修改后的 Rust 源码一致。其他架构需要对应原生库及构建配置。
+
+完成工具链、签名和原生库配置后执行：
+
+```sh
+flutter devices
+flutter run -d <device-id>
+flutter build apk --release --target-platform android-arm64
+```
+
+Release APK 通常位于 `build/app/outputs/flutter-apk/app-release.apk`。
+
+### 其他平台构建入口
+
+在对应宿主系统上配置好平台签名、原生库和依赖后，可使用以下命令。这些命令是构建入口，不代表目前所有平台均能直接编译通过。
+
+| 目标 | 命令 |
+| --- | --- |
+| Windows | `flutter build windows --release` |
+| macOS | `flutter build macos --release` |
+| iOS | `flutter build ipa --release` |
+
+开发检查可使用 `flutter test` 和 `flutter analyze`；已记录的结果与已知限制见[开发状态](docs/DEVELOPMENT.md)。
+
+## 上游截图参考
+
+以下图片保留自 Moodiary，仅用于展示上游设计；可能与本 fork 当前的界面、品牌和功能状态不同。
 
 ### 移动端
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="res/screenshot/mobile_dark_zh.webp">
   <source media="(prefers-color-scheme: light)" srcset="res/screenshot/mobile_light_zh.webp">
-  <img alt="The mobile screenshot for moodiary." src="res/screenshot/mobile_light_zh.webp">
+  <img alt="Moodiary 上游移动端截图，仅供参考。" src="res/screenshot/mobile_light_zh.webp">
 </picture>
 
 ### 桌面端
@@ -58,132 +111,13 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="res/screenshot/desktop_dark_zh.webp">
   <source media="(prefers-color-scheme: light)" srcset="res/screenshot/desktop_light_zh.webp">
-  <img alt="The desktop screenshot for moodiary." src="res/screenshot/desktop_light_zh.webp">
+  <img alt="Moodiary 上游桌面端截图，仅供参考。" src="res/screenshot/desktop_light_zh.webp">
 </picture>
 
-## 🚀 安装指南
+## 贡献与署名
 
-### 第三方 SDK
+本 fork 的问题与改动请使用本仓库的 [Issues](https://github.com/mygqdmmss/Loong-s-Diary/issues) 和 [Pull Requests](https://github.com/mygqdmmss/Loong-s-Diary/pulls)，附上复现步骤、受影响平台和相关验证结果。
 
-某些能力需要自行申请第三方 SDK，下列服务商均提供免费的版本，获取到的 Key 在实验室中配置。
+保留 Moodiary 原作者、贡献者及上游项目署名。上游社区和捐助信息请前往 [Moodiary](https://github.com/ZhuJHua/moodiary)，它们并非本 fork 的官方联系或捐助渠道。同时感谢 Flutter 和项目使用的开源组件，以及为保留的 NLP 实验提供基础的 [Chinese MobileBERT](https://github.com/ymcui/Chinese-MobileBERT)、[MobileBERT](https://github.com/google-research/google-research/tree/master/mobilebert) 和 [ChineseSquad](https://github.com/junzeng-pluto/ChineseSquad)。
 
-#### 天气服务
-
-- [和风天气](https://dev.qweather.com/docs/api/)
-
-#### 地图服务
-
-- [天地图](http://lbs.tianditu.gov.cn/server/MapService.html)
-
-#### 智能助手
-
-- [腾讯混元大模型](https://cloud.tencent.com/document/product/1729/97731)
-
-### 直接安装
-
-通过下载 Release 中已编译好的安装包来使用，如果没有你所需要的平台，请使用手动编译。
-
-### 手动编译
-
-#### 环境要求
-
-> 我总是会使用最新的 Flutter 版本（如果可能的话），使用新版本可以带来更多的功能和更好的性能提升，永远不要使用老版本除非你希望代码变成一坨 💩
-
-- Flutter SDK (>= 3.29.0 Stable)（建议使用 fvm 来管理 flutter 版本）
-- Dart (>= 3.7.0)
-- Rust 工具链（Nightly）
-- Clang/LLVM
-- 兼容的 IDE（如 Android Studio、Visual Studio Code）
-
-#### 安装步骤
-
-> 注意：出于安全考虑，我并没有在代码库中包含我的签名，当您需要手动打包时，需要自己修改对应平台的配置文件，例如安卓平台的 build.gradle，修改包名后打包，感谢您的理解
-
-1. **克隆仓库**：
-
-```bash
-git clone https://github.com/ZhuJHua/moodiary.git
-cd moodiary
-```
-
-2. **安装依赖**：
-
-```bash
-flutter pub get
-```
-
-3. **运行应用**：
-
-```bash
-flutter run
-```
-
-4. **打包发布**：
-
-- Android: `flutter build apk`
-- iOS: `flutter build ipa`
-- Windows: `flutter build windows`
-- MacOS: `flutter build macos`
-
-## 📝 更多说明
-
-### 自然语言处理（NLP）
-
-> 处于实验阶段
-
-如今，越来越多的行业产品开始融入 AI 技术，这无疑极大地提升了我们的使用体验。然而，对于日记应用来说，将数据交给大型模型处理并不可接受，因为无法确定这些数据是否会被用于训练。因此，更好的方法是采用本地模型。虽然由于体积限制，本地模型的能力可能不如大型模型强大，但在一定程度上仍能为我们提供必要的帮助。
-
-目前，我在源码中集成了以下任务：
-
-#### 基于 Bert 预训练模型的 SQuAD 任务
-
-我采用了 MobileBert 来处理 SQuAD 任务，这是一个简单的机器阅读理解任务。你可以向它提出问题，它会返回你需要的答案。模型文件采用 TensorFlow Lite 所需的 `.tflite` 格式，所以你可以添加自己的模型文件到 `assets/tflite` 目录下。
-
-感谢以下开源项目：
-
-- [Chinese MobileBERT](https://github.com/ymcui/Chinese-MobileBERT)
-- [Mobilebert](https://github.com/google-research/google-research/tree/master/mobilebert)
-- [ChineseSquad](https://github.com/junzeng-pluto/ChineseSquad)
-
-## 🤝 贡献指南
-
-欢迎贡献！请按照以下步骤进行贡献：
-
-1. Fork 本仓库。
-2. 创建一个新分支（`git checkout -b feature-branch-name`）。
-3. 提交你的修改（`git commit -am 'Add some feature'`）。
-4. 推送到分支（`git push origin feature-branch-name`）。
-5. 创建一个 Pull Request。
-
-请确保你的代码遵循 [Flutter 风格指南](https://flutter.dev/docs/development/tools/formatting) 并包含适当的测试。
-
-## 📄 许可证
-
-此项目基于 AGPL-3.0 许可证进行许可，详情请参阅 [LICENSE](LICENSE) 文件。
-
-## 💖 鸣谢
-
-- 感谢 Flutter 团队提供出色的框架。
-- 特别感谢开源社区的宝贵贡献。
-
-## 🥪 捐助
-
-可以给我买一个三明治，让我更有动力继续开发。
-
-<img src="res/sponsor/wechat.jpg" style="width:300px" alt="Sponsor"/>
-
-### 捐助者名单
-
-如果您想要出现在名单中，可以在留言中留下您的 Github 用户名，排名不分先后，名单会定期更新。
-
-| 捐助者                                | 金额     | 捐助者                                           | 金额      |
-| ------------------------------------- | -------- | ------------------------------------------------ | --------- |
-| [dsxksss](https://github.com/dsxksss) | 50 CNY   | 十*                                              | 20 CNY    |
-| 沭**                                  | 10 CNY   | 朱东杰                                           | 60 CNY    |
-| *人*                                  | 5 CNY    | wu*                                              | 10 CNY    |
-| 云*                                   | 2.76 CNY | 不对味的雪碧                                     | 10 CNY    |
-| w**                                   | 6.6 CNY  | [帕斯卡的芦苇](https://github.com/xiaoxianzi-99) | 10 CNY    |
-| 不**                                  | 20 CNY   | 曾**                                             | 20 CNY    |
-| *人*                                  | 20 CNY   | *人*                                             | 18.88 CNY |
-| Lucci                                 | 9.9 CNY  | *人*                                             | 5 CNY     |
-| 宋**                                  | 5 CNY    | 翰**                                             | 5 CNY     |
+本项目采用 **AGPL-3.0** 许可证，详见 [LICENSE](LICENSE)；重新分发时请保留适用的上游版权和许可声明。

@@ -1,8 +1,34 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+Personal-fork changes are recorded first. The upstream Moodiary history is preserved below.
 
-## [unreleased]
+## Loongs Diary — unreleased work
+
+These entries describe source changes in [mygqdmmss/Loong-s-Diary](https://github.com/mygqdmmss/Loong-s-Diary), not published app releases. See [the development status](docs/DEVELOPMENT.md) for verification and platform limitations.
+
+### 2026-11-09
+
+- Restored Jieba tokenization and TF-IDF keyword extraction. Analysis failures preserve existing derived data and allow diary text to be saved; empty text clears derived data.
+- Made the laboratory keyword rebuild await completion. Diary search remains case-insensitive title/body substring matching, with all whitespace-separated terms required.
+- Hardened backup imports with archive validation, database validation, staging and rollback, committing the database last. Exports keep the active database open and retain the existing Rust ZIP format.
+- Rewrote the Chinese and English READMEs for this fork, added current development status, and marked the weather design and plan as historical references.
+- Updated weather, location-permission and keyword-rebuild wording in both languages. Labeled retained QWeather settings as legacy configuration unused by the current weather and location flow.
+
+### 2026-07-11
+
+- Repaired Rust FFI initialization, text search and backup export compatibility. The November changes above further strengthen keyword analysis and backup handling.
+
+### 2026-05-16
+
+- Replaced online weather lookup with a manual picker containing 14 weather presets and temperatures from −30 to 50 °C.
+- Replaced QWeather location lookup with system location/geocoding and a coordinate fallback. Weather selection works without a weather API; resolving place names may require network access.
+- Kept existing weather data and QWeather configuration values for compatibility.
+
+## Upstream Moodiary history
+
+The entries below are the inherited upstream changelog. They do not describe new releases or the current feature status of this fork.
+
+## Upstream unreleased snapshot
 
 ### 🚀 Features
 

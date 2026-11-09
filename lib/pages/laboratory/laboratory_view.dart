@@ -52,6 +52,7 @@ class LaboratoryPage extends StatelessWidget {
               const Gap(12),
               QrInputTile(
                 title: '${context.l10n.labQweather} Key',
+                subtitle: context.l10n.labQweatherLegacyDes,
                 value: PrefUtil.getValue<String>('qweatherKey') ?? '',
                 prefix: 'qweatherKey',
                 onValue: (value) async {
@@ -66,6 +67,7 @@ class LaboratoryPage extends StatelessWidget {
               const Gap(12),
               QrInputTile(
                 title: '${context.l10n.labQweather} API Host',
+                subtitle: context.l10n.labQweatherLegacyDes,
                 value: PrefUtil.getValue<String>('qweatherApiHost') ?? '',
                 prefix: 'qweatherApiHost',
                 onValue: (value) async {
@@ -126,14 +128,15 @@ class LaboratoryPage extends StatelessWidget {
               const Gap(12),
               ListTile(
                 onTap: () async {
+                  final l10n = context.l10n;
                   final res = await logic.generateFTSAndKeyword();
                   if (res) {
-                    toast.success(message: '重新生成成功');
+                    toast.success(message: l10n.labRegenerateKeywordsSuccess);
                   } else {
-                    toast.error(message: '重新生成失败');
+                    toast.error(message: l10n.labRegenerateKeywordsError);
                   }
                 },
-                title: const Text('重新进行全文搜索索引'),
+                title: Text(context.l10n.labRegenerateKeywords),
               ),
             ],
           );

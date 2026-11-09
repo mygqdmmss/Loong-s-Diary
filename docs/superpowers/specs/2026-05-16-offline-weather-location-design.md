@@ -1,12 +1,24 @@
-# 离线天气与定位改造设计
+# 离线天气与定位改造设计（历史方案）
 
 **日期**：2026-05-16
-**项目**：Loong-s-Diary（DenserMeerkat/June 个人化 fork）
-**状态**：草稿，待实施
+**项目**：mygqdmmss/Loong-s-Diary（基于 Moodiary）
+**状态**：代码已于 2026-05-16 落地；2026-11-09 核对。Android 真机验收仍未验证。
+
+## 当前状态
+
+当前开发入口见 [DEVELOPMENT.md](../../DEVELOPMENT.md)。本方案的依赖、本地化、14 项天气预设、双滚轮选择器、系统地名反查及编辑流程，已由 `d120894` 至 `536f3c8` 的提交实现；对应关系见[历史实施计划](../plans/2026-05-16-offline-weather-location.md#当前状态与证据)。
+
+天气和 `-30～50°C` 温度均由用户手选，不再调用和风天气；系统地名反查失败但已有定位坐标时显示经纬度。系统地理编码服务可能依赖网络，不能保证离线地名可用。旧 `qweatherKey` / `qweatherApiHost` 保留，但不参与当前天气和地点流程。
+
+下文保留 **2026-05-16 的设计与示例代码**，不代表最新源码，也不应直接用于覆盖现有实现。坐标工具实际位于 `lib/utils/geo_format_util.dart`，测试位于 `test/geo_format_util_test.dart`；2026-07-11 还调整了自动触发时的权限提示及取消选择后的异常处理。原文中的约 12 秒是 GPS 与反查超时的设计估算，不是包含系统权限交互的端到端时限。
+
+2026-11-09 的 92 项 Flutter 测试包含天气预设和坐标工具测试，详见 [DEVELOPMENT.md 的验证范围](../../DEVELOPMENT.md#验证记录与平台范围)。这不代表下文 Android 15 手动场景已验收，也不证明历史每一次 red / green、编译检查都曾执行。
+
+---
 
 ## 背景与动机
 
-当前编辑日记时获取"天气"和"地点"都依赖和风天气（qweather）API，需要用户在设置页填写 `qweatherKey` 与 `qweatherApiHost`，对个人使用造成门槛。本次改造目标：
+改造前，编辑日记时获取"天气"和"地点"都依赖和风天气（qweather）API，需要用户在设置页填写 `qweatherKey` 与 `qweatherApiHost`，对个人使用造成门槛。当时的改造目标：
 
 - **天气**：不再调用 qweather `/v7/weather/now`，改为内置预设 + 双滚轮底部弹层让用户手选天气类型与温度。
 - **地点**：不再调用 qweather `/geo/v2/city/lookup` 反查城市名，改用系统级反查（Android `Geocoder` / iOS `CLGeocoder`）；失败时退回经纬度字符串显示。
@@ -391,7 +403,9 @@ dependencies:
 
 （`_formatCoords` 和 `_composePlacemark` 需提至 `@visibleForTesting` 或挪到独立文件以便测试。）
 
-### 手动测试（Android 15 真机）
+### 手动测试（Android 15 真机，历史验收目标，尚未验证）
+
+以下地名仅为示例，实际结果由系统服务决定。飞行模式下若取不到坐标则保留原地点；若系统仍可反查地名，则不一定显示坐标。
 
 1. 新建日记 → 点定位按钮 → 弹层从底部滑上 → 滑动天气和温度 → 确认 → 列表项展示 "上海市 浦东新区 23°C"
 2. 取消按钮 → 啥也没变

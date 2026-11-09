@@ -1,55 +1,109 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="res/banner/dark_en.svg">
-  <source media="(prefers-color-scheme: light)" srcset="res/banner/light_en.svg">
-  <img alt="The preview for moodiary." src="res/banner/light_en.svg">
-</picture>
-<p align="center"><a href="README.zh.md">简体中文</a> | English</p>
+# Loong's Diary
 
-<p align="center"><a href="https://answer.moodiary.net" target="_blank">Official forum</a>丨QQ Group: <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=xGr0TNp_X1z3XEn09_iE_iGSLolQwl6Y&jump_from=webapi&authKey=ZmSb2oEd94FSXxBXRBq53hgTjjvcfmgkQrduB3uL12XtRylPmRlO2OdFz6R25tIo">760014526</a>丨Telegram: <a target="_blank" href="https://t.me/openmoodiary">openmoodiary</a></p>
+[简体中文](README.zh.md) | English
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.29.2-blue?style=for-the-badge">
-  <img src="https://img.shields.io/github/repo-size/ZhuJHua/moodiary?style=for-the-badge&color=ff7070">
-  <img src="https://img.shields.io/github/stars/ZhuJHua/moodiary?style=for-the-badge&color=965f8a">
-  <img src="https://img.shields.io/github/v/release/ZhuJHua/moodiary?style=for-the-badge&color=4f5e7f">
-  <img src="https://img.shields.io/github/license/ZhuJHua/moodiary?style=for-the-badge&color=4ac6b7">
-</div>
+A personal fork of [Moodiary](https://github.com/ZhuJHua/moodiary), the open-source diary app created by [ZhuJHua](https://github.com/ZhuJHua) and its contributors. This fork retains the Flutter, Rust, Isar and GetX foundation and focuses on daily journaling and data reliability.
 
+The Android release is named **Loongs Diary**. Dart packages and several other platform identifiers still use `moodiary` / `Moodiary`; renaming is not complete across platforms. The source version is `2.7.3+90`, with Flutter `3.32.0` pinned in [.fvmrc](.fvmrc).
 
-## ✨ Feature
+See [current development status](docs/DEVELOPMENT.md) for implementation and verification details, and [CHANGELOG](CHANGELOG.md) for recorded changes.
 
-- **Cross-platform support**: 🌍 Compatible with Android, iOS, Windows, MacOS, Linux\*.
-- **Material Design**: 🎨 The interface is intuitive and user-friendly, and follows the Material Design specifications.
-- **Multiple editors**: 📝 supports markdown, plain text, rich text and other forms of text editing.
-- **Multimedia accessories**: 📷 You can add pictures, audio, video or even draw a picture to your diary.
-- **Search and classification**: 🔍 Easily manage your diary by full-text search and categorization.
-- **Custom theme**: 🌈 Supports light and dark modes, as well as a variety of color schemes.
-- **Custom fonts**: ✍️ Supports importing different fonts, and supports variable fonts.
-- **Data security**: 🔒 Keep your diary safe with a password, supports biometric unlocking.
-- **Export and share**: 🧾 Support all data import/export, as well as single diary sharing.
-- **Backup and synchronization**: ☁ Support for LAN synchronization and WebDav backup.
-- **Trail Map**:  🗺️ See your footprints on a map. Every step of your life is worth documenting.
-- **Intelligent assistant**: 💬 Supports access to third-party large models, provides Q&A, sentiment analysis and other functions.
-- **Local Natural Language Processing (NLP)**: 🤖 A more secure intelligent assistant that lets your diary know you better.
+## Current capabilities
 
-(Note: Cross-platform capabilities are provided by Flutter, and platforms with * marks may require more testing)
+- Local diary storage with plain text, Markdown and rich-text editors; photos, audio, video and drawing attachments.
+- Search, categories, mood records and statistics; local Rust/Jieba keyword extraction for diary metadata.
+- Light/dark themes, custom colors and font imports; password and biometric app unlocking where supported by the device.
+- Full-backup import/export, individual diary sharing, LAN transfer and the existing WebDAV sync implementation.
+- Manual weather selection: **14 presets and −30 to 50 °C**, with no weather API key required.
+- Location recording through system location services. System place-name lookup can require connectivity; when it fails after coordinates are obtained, the diary uses coordinates as the display name.
 
-## 🔧 Main Technology stack
+Recent reliability work restores keyword generation and adds backup validation, staging and rollback on caught restore errors. **Automatic recovery after force termination or a crash is not implemented.** Code and automated checks do not establish that every feature works on every platform; see the development status for the scope of verification.
 
-- [Flutter](https://github.com/flutter/flutter) ( Cross-platform UI framework )
-- [Isar](https://github.com/isar/isar) ( High performance local database )
-- [GetX](https://github.com/jonataslaw/getx) ( State management framework )
+## Optional services and experimental code
 
-## 📸 Application screenshot
+| Capability | Current state and setup |
+| --- | --- |
+| Weather | Selected manually in the editor. QWeather credentials are not needed for the current flow. |
+| Trail map | Uses online map tiles; configure a [Tianditu](http://lbs.tianditu.gov.cn/server/MapService.html) key in Settings → Lab. |
+| Online assistant and mood analysis | [Tencent Hunyuan](https://cloud.tencent.com/document/product/1729/97731) integration exists. Configure Tencent Cloud ID and Key in Settings → Lab; requests send conversation content or mood statistics to the service. |
+| WebDAV | Configure your server, username and password under backup/sync settings. The app currently uses `lib/utils/webdav_util.dart`; the newer `lib/services/sync/` replacement is unfinished. |
+| Local TensorFlow Lite Q&A | Experimental source remains, but model initialization/inference is disabled. It is not an available offline assistant. |
+| Supabase, self-hosted server and MinIO | Supabase is not connected, `server/` is a backend skeleton, and MinIO is not enabled. These are not working cloud-sync options. |
 
-> The application is constantly updated, and the interface may change slightly in the new version
+Online services require network access and valid provider configuration. Their end-to-end operation has not been newly verified for this revision.
+
+## Platforms and installation
+
+| Platform | Repository status |
+| --- | --- |
+| Android | App project present; currently targets ARM64 (`arm64-v8a`), Android 8.0 / API 26 or later. Release application ID: `cn.yooss.moodiary.loongs`. |
+| iOS / macOS | App projects present; require the Apple toolchain and separate build/device verification. |
+| Windows | App project present; requires the Windows desktop toolchain and separate build/runtime verification. |
+| Linux / Web | No top-level app project in this checkout. A Rust plugin's Linux directory does not establish Linux app support. |
+
+Check this fork's [Releases](https://github.com/mygqdmmss/Loong-s-Diary/releases) for any published packages and their stated revision. Local build records and APKs do not imply that a GitHub release exists. The current data-reliability changes have not been packaged into a new APK or verified on a physical device.
+
+The in-app update checker still points to **upstream Moodiary releases**. It does not currently track releases of this fork.
+
+## Build from source
+
+### Toolchain
+
+- Flutter **3.32.0** from [.fvmrc](.fvmrc), with Dart **3.8.0 or later** as required by [pubspec.yaml](pubspec.yaml). FVM is optional; the commands below use `flutter` from `PATH`.
+- Rust stable with support for Rust edition 2024, plus the target platform's compiler/linker. The checked-in workflows and Cargokit default to stable; no nightly toolchain is pinned.
+- For Android: **JDK 21**, Android SDK Platform **36**, Build Tools **36.0.0**, and NDK **28.0.13004108**. The NDK provides the Android Clang/LLVM toolchain.
+- For Windows: Visual Studio with the Desktop development with C++ workload and CMake. For iOS/macOS: macOS with Xcode and CocoaPods.
+
+### Get the source and dependencies
+
+```sh
+git clone https://github.com/mygqdmmss/Loong-s-Diary.git
+cd Loong-s-Diary
+flutter --version
+flutter doctor -v
+flutter pub get
+```
+
+Dependency resolution needs network access, including the Git dependencies declared in `pubspec.yaml` and `rust/Cargo.toml`.
+
+### Android configuration
+
+Review [android/app/build.gradle](android/app/build.gradle) before building. Its **release, debug and profile** variants all reference a custom signing configuration. Supply your own keystore at `android/app/key.jks`, set `storePassword` and `keyPassword` in `android/local.properties`, and match the configured alias (`key0`) to your key. Alternatively, change the local signing configuration to suit your development setup. Preserve the SDK paths generated in `local.properties`; keep keystores and passwords out of version control.
+
+The repository contains a prebuilt native library at `android/app/src/main/jniLibs/arm64-v8a/libmoodiary_rust.so` and also configures Rust builds through `rust_builder/` and Cargokit. Cargokit depends on detecting the Flutter Gradle plugin and skips its integration when detection fails. Check the build log and the library included in the APK, especially after Rust changes: the presence of a prebuilt library does not confirm that it matches edited Rust source. Other architectures require corresponding native libraries and build configuration.
+
+After resolving the toolchain, signing and native-library configuration:
+
+```sh
+flutter devices
+flutter run -d <device-id>
+flutter build apk --release --target-platform android-arm64
+```
+
+The release APK is normally written to `build/app/outputs/flutter-apk/app-release.apk`.
+
+### Other platform build entry points
+
+Use these commands on the corresponding host after configuring that platform's signing, native libraries and dependencies. They are build entry points, not a claim that all platforms currently build without changes.
+
+| Target | Command |
+| --- | --- |
+| Windows | `flutter build windows --release` |
+| macOS | `flutter build macos --release` |
+| iOS | `flutter build ipa --release` |
+
+For development checks, use `flutter test` and `flutter analyze`; recorded results and known limitations belong in [development status](docs/DEVELOPMENT.md).
+
+## Upstream screenshots for reference
+
+These images are retained from Moodiary. They illustrate the upstream design and may differ from this fork's current UI, branding and available features.
 
 ### Mobile
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="res/screenshot/mobile_dark_en.webp">
   <source media="(prefers-color-scheme: light)" srcset="res/screenshot/mobile_light_en.webp">
-  <img alt="The mobile screenshot for moodiary." src="res/screenshot/mobile_light_en.webp">
+  <img alt="Upstream Moodiary mobile screenshot, for reference." src="res/screenshot/mobile_light_en.webp">
 </picture>
 
 ### Desktop
@@ -57,132 +111,13 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="res/screenshot/desktop_dark_en.webp">
   <source media="(prefers-color-scheme: light)" srcset="res/screenshot/desktop_light_en.webp">
-  <img alt="The desktop screenshot for moodiary." src="res/screenshot/desktop_light_en.webp">
+  <img alt="Upstream Moodiary desktop screenshot, for reference." src="res/screenshot/desktop_light_en.webp">
 </picture>
 
-## 🚀 Installation guide
+## Contributing and attribution
 
-### Third party SDK
+Use this fork's [Issues](https://github.com/mygqdmmss/Loong-s-Diary/issues) and [Pull Requests](https://github.com/mygqdmmss/Loong-s-Diary/pulls) for its changes. Include reproduction steps, the affected platform and relevant verification results.
 
-Some capabilities need to apply for third-party SDKS, and the following service providers provide free versions, and the obtained keys are configured in the lab.
+Moodiary's original author, contributors and upstream project remain credited. Upstream community and donation information belongs to [Moodiary](https://github.com/ZhuJHua/moodiary), rather than serving as this fork's official contact or donation channel. Thanks also to Flutter and the open-source projects used by the app, including [Chinese MobileBERT](https://github.com/ymcui/Chinese-MobileBERT), [MobileBERT](https://github.com/google-research/google-research/tree/master/mobilebert) and [ChineseSquad](https://github.com/junzeng-pluto/ChineseSquad) for the retained NLP experiments.
 
-#### Weather service
-
-- [QWeather](https://dev.qweather.com/docs/api/)
-
-#### Map service
-
-- [Tianditu](http://lbs.tianditu.gov.cn/server/MapService.html)
-
-#### Intelligent assistant
-
-- [Tencent Hunyuan](https://cloud.tencent.com/document/product/1729/97731)
-
-### Direct install
-
-Use it by downloading the compiled installation package in Release, or manually compiling it if you don't have the platform you need.
-
-### Manual compilation
-
-#### Environmental requirement
-
-> I always use the latest Flutter version (if possible), using newer versions will bring more features and better performance improvements, never use older versions unless you want your code to become a piece of 💩
-
-- Flutter SDK (>= 3.29.0 Stable) (It is recommended to use FVM to manage the Flutter version)
-- Dart (>= 3.7.0)
-- Rust Toolchain (Nightly)
-- Clang/LLVM
-- Compatible IDE (e.g. Android Studio, Visual Studio Code)
-
-#### Installation procedure
-
-> Note: For security reasons, I did not include my signature in the code base, when you need to manually package, you need to modify the configuration file of the corresponding platform, such as build.gradle on the Android platform, and package after modifying the package name, thank you for your understanding.
-
-1. **Clone Repo**：
-
-```bash
-git clone https://github.com/ZhuJHua/moodiary.git
-cd moodiary
-```
-
-2. **Installation dependency**：
-
-```bash
-flutter pub get
-```
-
-3. **Running application**：
-
-```bash
-flutter run
-```
-
-4. **Package release**：
-
-- Android: `flutter build apk`
-- iOS: `flutter build ipa`
-- Windows: `flutter build windows`
-- MacOS: `flutter build macos`
-
-## 📝 More description
-
-### Natural Language Processing (NLP)
-
-> In the experimental stage
-
-Today, more and more industry products are beginning to incorporate AI technology, which undoubtedly greatly improves our experience. However, for diary applications, it is not acceptable to hand over the data to a large model because it is not certain that the data will be used for training. Therefore, a better approach is to adopt a local model. Although local models may not be as powerful as large models due to size limitations, they can still provide necessary help to a certain extent. 
-
-Currently, I have the following tasks integrated into the source code:
-
-#### SQuAD task based on Bert pre-trained model
-
-I used MobileBert for the SQuAD task, which is a simple machine reading comprehension task. You can ask it questions and it will return the answers you need. The model files are in the `.tflite` format required by TensorFlow Lite, so you can add your own model files to the `assets/tflite` directory.
-
-Thanks to the following open source projects:
-
-- [Chinese MobileBERT](https://github.com/ymcui/Chinese-MobileBERT)
-- [Mobilebert](https://github.com/google-research/google-research/tree/master/mobilebert)
-- [ChineseSquad](https://github.com/junzeng-pluto/ChineseSquad)
-
-## 🤝 Contribution guide
-
-Contributions are welcome! Please follow these steps to contribute:
-
-1. Fork this repository.
-2. Create a new branch(`git checkout -b feature-branch-name`)。
-3. Commit your changes(`git commit -am 'Add some feature'`)。
-4. Push to branch(`git push origin feature-branch-name`)。
-5. Create a Pull Request.
-
-Please make sure that your code to follow [Flutter style guide](https://flutter.dev/docs/development/tools/formatting) and include the appropriate tests.
-
-## 📄 License
-
-This project is licensed under the AGPL-3.0 LICENSE, see the [LICENSE](LICENSE) file for details.
-
-## 💖 Thanks
-
-- Thanks to the Flutter team for the excellent framework.
-- Special thanks to the open source community for their valuable contributions.
-
-## 🥪 Sponsor
-
-You can buy me a sandwich to keep me motivated to continue developing.
-
-<img src="res/sponsor/wechat.jpg" style="width:300px"  alt="Sponsor"/>
-
-### List of sponsors
-
-If you want to appear on the list, you can leave your Github username in the comment, in no particular order, and the list will be updated regularly.
-
-| Sponsor                           | Price    | Sponsor                                          | Price  |
-|-----------------------------------| -------- | ------------------------------------------------ | ------ |
-| [dsxksss](https://github.com/dsxksss) | 50 CNY   | 十*                                            | 20 CNY |
-| 沭**                             | 10 CNY   | 朱东杰                                           | 60 CNY |
-| *Person*                    | 5 CNY    | wu*                                             | 10 CNY |
-| 云*                               | 2.76 CNY | 不对味的雪碧                                     | 10 CNY |
-| w**                        | 6.6 CNY  | [帕斯卡的芦苇](https://github.com/xiaoxianzi-99) | 10 CNY |
-| 不** | 20 CNY | 曾** | 20 CNY |
-| *Person* | 20 CNY | *Person* | 18.88 CNY |
-| Lucci | 9.9 CNY | *Person* | 5 CNY |
-| 宋** | 5 CNY | 翰** | 5 CNY |
+This project is licensed under **AGPL-3.0**. See [LICENSE](LICENSE); retain applicable upstream copyright and license notices when redistributing.

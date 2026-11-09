@@ -1,6 +1,28 @@
-# 离线天气与定位改造 · 实施计划
+# 离线天气与定位改造 · 历史实施计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> 本计划的代码任务已于 2026-05-16 落地，2026-11-09 重新核对。当前开发状态见 [DEVELOPMENT.md](../../DEVELOPMENT.md)。下文保留原计划步骤和示例代码，未勾选不表示需要重新实现。
+
+## 当前状态与证据
+
+| 原任务 | 已核对的实现 / 提交 |
+|---|---|
+| Task 1：依赖 | `d120894` 添加 `geocoding`；`90fa84a` 包含相应锁文件变更 |
+| Task 2：本地化 | `90fa84a` 添加中英文天气文案及生成的本地化代码 |
+| Task 3：预设表 | `d9deeb9` 添加 14 项预设及测试 |
+| Task 4：标签解析 | `af46143` 添加 `WeatherPresetL10n` 及测试 |
+| Task 5：坐标工具 | `33745ba` 添加 `geo_format_util.dart` 及测试 |
+| Task 6：系统地名反查 | `3d9267d` 改写 `Api.updatePosition` 并加入坐标兜底 |
+| Task 7：移除天气请求 | `06b7906` 删除 `Api.updateWeather` 及无用导入 |
+| Task 8：天气选择器 | `d8e9c8d` 添加天气 / 温度双滚轮，温度范围 `-30～50°C` |
+| Task 9：编辑流程 | `536f3c8` 接入选择器及并行定位；`054fcc1` 后续调整权限提示与异常处理 |
+| Task 10：自动验证 | 2026-11-09 数据可靠性修复记录了全套 92 项 Flutter 测试通过，含天气及坐标工具；静态分析记录仅覆盖当次变更文件。未找到本计划当时的完整逐步验证记录 |
+| Task 11：真机验收 | Android 15 的逐项手动验收仍未验证；2026-11-09 未构建或安装新 APK |
+
+提交与现有源码能证明实现已经存在，不能证明原计划的每次失败测试、通过测试、编译或真机检查均已执行。因此保留下方历史步骤的未勾选状态，以本表和 [DEVELOPMENT.md 的验证记录](../../DEVELOPMENT.md#验证记录与平台范围)说明实际进度。
+
+原计划中的路径、示例代码、测试数量和界面文案保留当时语境。继续修改时读取当前源码；地名取决于系统服务，GPS 与反查的超时设计也不包含用户权限交互时间。
+
+---
 
 **Goal:** 移除编辑日记时对和风天气 API 的依赖：天气改用内置 14 项预设 + 双滚轮底部弹层手选；地点改用系统级 `geocoding` 反查并以经纬度兜底。
 
@@ -983,7 +1005,7 @@ flutter test
 
 ---
 
-## Task 11: Android 真机手动验证（按规格 6 项）
+## Task 11: Android 真机手动验证（按规格 6 项，尚未验证）
 
 **Files:** 无代码修改（除非发现 bug）
 
@@ -1028,10 +1050,10 @@ git commit -m "fix: <具体说明>"
 
 ---
 
-## 验收标准
+## 验收标准（原计划目标，非完成记录）
 
-- ✅ `flutter test` 全 PASS（含 16+2 个新增 test）
-- ✅ `flutter analyze` 无新增 error/warning
-- ✅ Android 15 真机上 8 项手动检查全 ☑
-- ✅ 不再读 `qweatherKey` / `qweatherApiHost`（grep `lib/` 应只有设置页 UI 和 `pref.dart` 默认值还有引用，运行路径上无引用）
-- ✅ 老日记数据加载正常（`Diary.weather` / `Diary.position` 字段兼容）
+- `flutter test` 全部通过，覆盖天气预设和坐标工具；当前测试记录见顶部状态表。
+- `flutter analyze` 不增加 error / warning；历史全工程比较结果未留存。
+- Android 15 真机完成上述 8 项手动检查；仍需实际验收。
+- 天气 / 定位流程不再读取 `qweatherKey` / `qweatherApiHost`；旧设置保存入口和默认值保留。
+- `Diary.weather` / `Diary.position` 格式保持兼容，并通过旧日记的设备回归检查；字段格式已保持，设备回归未验证。

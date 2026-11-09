@@ -73,7 +73,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get permission2 => '为了更好的使用体验，我们需要以下权限';
 
   @override
-  String get permission3 => '• 定位权限（用于获取天气）';
+  String get permission3 => '• 定位权限（可选，用于记录日记位置；选择天气无需授权）';
 
   @override
   String get shareTitle => '分享';
@@ -595,7 +595,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get diarySettingCommonDes => '日记的基本设置';
 
   @override
-  String get diarySettingAutoGetWeather => '自动获取天气';
+  String get diarySettingAutoGetWeather => '新建日记时选择天气';
+
+  @override
+  String get diarySettingAutoGetWeatherDes => '打开天气与温度选择，并尝试获取位置。';
 
   @override
   String get diarySettingAutoSetCategory => '自动设置分类';
@@ -791,13 +794,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get locationError => '定位失败';
 
   @override
-  String get weatherError => '天气获取失败';
+  String get weatherError => '天气更新失败';
 
   @override
-  String get weatherFetching => '天气获取中';
+  String get weatherFetching => '正在更新天气';
 
   @override
-  String get weatherSuccess => '天气获取成功';
+  String get weatherSuccess => '天气已更新';
 
   @override
   String get sureToSave => '确定保存吗';
@@ -885,7 +888,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noOption => '未配置';
 
   @override
-  String get labQweather => '和风天气';
+  String get labQweather => '和风天气（旧配置）';
+
+  @override
+  String get labQweatherLegacyDes => '无需填写，当前天气和定位不使用这些设置。';
+
+  @override
+  String get labRegenerateKeywords => '重新生成日记关键词';
+
+  @override
+  String get labRegenerateKeywordsSuccess => '日记关键词已重新生成';
+
+  @override
+  String get labRegenerateKeywordsError => '日记关键词重新生成失败';
 
   @override
   String get labTianditu => '天地图';

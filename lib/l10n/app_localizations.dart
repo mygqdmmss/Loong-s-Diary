@@ -227,7 +227,7 @@ abstract class AppLocalizations {
   /// No description provided for @permission3.
   ///
   /// In zh, this message translates to:
-  /// **'• 定位权限（用于获取天气）'**
+  /// **'• 定位权限（可选，用于记录日记位置；选择天气无需授权）'**
   String get permission3;
 
   /// No description provided for @shareTitle.
@@ -1265,8 +1265,14 @@ abstract class AppLocalizations {
   /// No description provided for @diarySettingAutoGetWeather.
   ///
   /// In zh, this message translates to:
-  /// **'自动获取天气'**
+  /// **'新建日记时选择天气'**
   String get diarySettingAutoGetWeather;
+
+  /// No description provided for @diarySettingAutoGetWeatherDes.
+  ///
+  /// In zh, this message translates to:
+  /// **'打开天气与温度选择，并尝试获取位置。'**
+  String get diarySettingAutoGetWeatherDes;
 
   /// No description provided for @diarySettingAutoSetCategory.
   ///
@@ -1649,19 +1655,19 @@ abstract class AppLocalizations {
   /// No description provided for @weatherError.
   ///
   /// In zh, this message translates to:
-  /// **'天气获取失败'**
+  /// **'天气更新失败'**
   String get weatherError;
 
   /// No description provided for @weatherFetching.
   ///
   /// In zh, this message translates to:
-  /// **'天气获取中'**
+  /// **'正在更新天气'**
   String get weatherFetching;
 
   /// No description provided for @weatherSuccess.
   ///
   /// In zh, this message translates to:
-  /// **'天气获取成功'**
+  /// **'天气已更新'**
   String get weatherSuccess;
 
   /// No description provided for @sureToSave.
@@ -1817,8 +1823,32 @@ abstract class AppLocalizations {
   /// No description provided for @labQweather.
   ///
   /// In zh, this message translates to:
-  /// **'和风天气'**
+  /// **'和风天气（旧配置）'**
   String get labQweather;
+
+  /// No description provided for @labQweatherLegacyDes.
+  ///
+  /// In zh, this message translates to:
+  /// **'无需填写，当前天气和定位不使用这些设置。'**
+  String get labQweatherLegacyDes;
+
+  /// No description provided for @labRegenerateKeywords.
+  ///
+  /// In zh, this message translates to:
+  /// **'重新生成日记关键词'**
+  String get labRegenerateKeywords;
+
+  /// No description provided for @labRegenerateKeywordsSuccess.
+  ///
+  /// In zh, this message translates to:
+  /// **'日记关键词已重新生成'**
+  String get labRegenerateKeywordsSuccess;
+
+  /// No description provided for @labRegenerateKeywordsError.
+  ///
+  /// In zh, this message translates to:
+  /// **'日记关键词重新生成失败'**
+  String get labRegenerateKeywordsError;
 
   /// No description provided for @labTianditu.
   ///

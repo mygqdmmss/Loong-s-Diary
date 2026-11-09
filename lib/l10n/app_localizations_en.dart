@@ -75,7 +75,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'In order to better use the experience, we need the following permissions';
 
   @override
-  String get permission3 => '• Location permission (for getting the weather)';
+  String get permission3 =>
+      '• Location permission (optional, to record entry locations; not needed to choose weather)';
 
   @override
   String get shareTitle => 'Share';
@@ -609,7 +610,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get diarySettingCommonDes => 'Basic settings of diary';
 
   @override
-  String get diarySettingAutoGetWeather => 'Get weather automatically';
+  String get diarySettingAutoGetWeather => 'Choose weather for new entries';
+
+  @override
+  String get diarySettingAutoGetWeatherDes =>
+      'Open the weather and temperature picker and try to get your location.';
 
   @override
   String get diarySettingAutoSetCategory => 'Automatically set category';
@@ -806,13 +811,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationError => 'Location failed';
 
   @override
-  String get weatherError => 'Failed to obtain weather';
+  String get weatherError => 'Failed to update weather';
 
   @override
-  String get weatherFetching => 'Weather Fetching';
+  String get weatherFetching => 'Updating weather';
 
   @override
-  String get weatherSuccess => 'Weather acquisition successful';
+  String get weatherSuccess => 'Weather updated';
 
   @override
   String get sureToSave => 'Are you sure you want to save';
@@ -919,7 +924,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noOption => 'Not configured';
 
   @override
-  String get labQweather => 'Qweather';
+  String get labQweather => 'QWeather (legacy)';
+
+  @override
+  String get labQweatherLegacyDes =>
+      'No setup needed. Weather and location no longer use these settings.';
+
+  @override
+  String get labRegenerateKeywords => 'Regenerate diary keywords';
+
+  @override
+  String get labRegenerateKeywordsSuccess => 'Diary keywords regenerated';
+
+  @override
+  String get labRegenerateKeywordsError =>
+      'Failed to regenerate diary keywords';
 
   @override
   String get labTianditu => 'Tianditu';

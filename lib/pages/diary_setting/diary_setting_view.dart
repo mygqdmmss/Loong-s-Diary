@@ -35,6 +35,7 @@ class DiarySettingPage extends StatelessWidget {
                     logic.autoWeather(value);
                   },
                   title: context.l10n.diarySettingAutoGetWeather,
+                  subtitle: context.l10n.diarySettingAutoGetWeatherDes,
                   secondary: const Icon(Icons.wb_sunny_rounded),
                 );
               }),
