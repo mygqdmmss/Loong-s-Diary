@@ -7,7 +7,7 @@
 | 项目 | 当前情况 |
 |---|---|
 | 项目 | Loong-s-Diary，基于 Moodiary 的个人分支 |
-| 应用版本 | [`pubspec.yaml`](../pubspec.yaml) 仍为 `2.7.3+90`，近期修复没有提升版本号，也没有生成新的 APK |
+| 应用版本 | [`pubspec.yaml`](../pubspec.yaml) 仍为 `2.7.3+90`；已从 `64313aa` 本地构建 Android APK `2.7.3+91`，构建号通过命令行覆盖，未修改源码版本号 |
 | Flutter / Dart | [`.fvmrc`](../.fvmrc) 固定 Flutter `3.32.0`；2026-11-09 本机验证使用 Flutter `3.32.8` / Dart `3.8.1`。`pubspec.yaml` 要求 Dart `>=3.8.0` |
 | 界面与状态 | Flutter、GetX、Flutter Quill / Markdown，中英文 ARB 本地化 |
 | 本地数据 | Isar `4.0.0-dev.14` 保存日记、分类和字体；偏好设置、缓存与媒体文件另行存储 |
@@ -23,6 +23,7 @@
 | 2026-07-11，`054fcc1` | 修复 Rust FFI，调整搜索、备份导出、日记详情与编辑流程 |
 | 2026-11-09，`cca6d84` | 恢复自动分词与关键词，统一等待 Rust 初始化；备份导入增加暂存校验、数据库校验、目录替换和异常回滚 |
 | 2026-11-09，文档与界面文案对齐 | 更新 README、当前开发状态入口和历史计划，修正天气 / 定位、旧和风天气配置、关键词重新生成入口的说明 |
+| 2026-11-09，Android 本地安装包 | 从 `64313aa` 构建 `2.7.3+91` ARM64 Release APK；签名、包名、ZIP 完整性和对齐检查通过，尚未安装到真机 |
 
 ## 已实现功能与使用边界
 
@@ -68,9 +69,18 @@
 | 平台 / 路径 | 验证边界 |
 |---|---|
 | Windows 开发环境 | 上述 Flutter 测试和真实 Isar 测试已记录通过；依赖解析曾提示 Windows 符号链接支持不可用，本轮未修改系统设置或验证桌面应用完整构建 |
-| Android | 仓库有工程及原生库，历史天气计划的 Android 15 手动检查仍缺少逐项验收记录；本次修复未构建或安装新 APK |
+| Android | 已本地构建 `64313aa` 的 `2.7.3+91` ARM64 Release APK 并完成包内容与签名校验；未连接 Android 设备，历史天气计划及本次修复仍缺少逐项真机验收记录 |
 | iOS / macOS | 仓库保留平台工程，本轮未构建或真机验证 |
 | Rust / Zstd 目标设备往返 | 尚未在目标设备验证真实 Rust 导出、导入、媒体和数据库的一整套往返；Dart 测试与真实 Isar 测试不能替代该验收 |
+
+### Android 安装包记录
+
+- 文件：`build/releases/Loongs-Diary-2.7.3-build91-64313aa-arm64.apk`，74,283,065 字节（约 70.8 MiB）；该目录是本地产物，不进入版本控制。
+- 构建命令：`flutter --no-version-check build apk --release --target-platform android-arm64 --build-name=2.7.3 --build-number=91 --no-pub`。
+- 包名 `cn.yooss.moodiary.loongs`，最低 API 26，目标 API 36；APK v2 / v3 签名验证通过，签名证书与 2026-07-11 的旧 APK 一致，构建号由 90 增至 91。
+- SHA-256：`94fea9ae256423a11e4236b9d7dcb1aff742e440ee89a12ab21ee2b3123fa05e`。
+- CargoKit 未识别 Flutter 插件，使用仓库已有的 Android 原生库；APK 中经过符号裁剪的 Rust 库与旧 APK 逐字节相同。此次修复没有修改 Rust 源码或生成的桥接文件。
+- APK 包含关键词、备份可靠性和文案修复；月份包裹新界面仍在设计预览阶段，不包含在此 APK 中。本次未发布 GitHub Release，也未进行设备安装或运行验证。
 
 ## 开发入口
 
