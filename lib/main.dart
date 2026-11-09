@@ -24,9 +24,9 @@ import 'package:moodiary/persistence/isar.dart';
 import 'package:moodiary/persistence/pref.dart';
 import 'package:moodiary/router/app_pages.dart';
 import 'package:moodiary/router/app_routes.dart';
-import 'package:moodiary/src/rust/frb_generated.dart';
 import 'package:moodiary/utils/log_util.dart';
 import 'package:moodiary/utils/media_util.dart';
+import 'package:moodiary/utils/rust_util.dart';
 import 'package:moodiary/utils/theme_util.dart';
 import 'package:moodiary/utils/webdav_util.dart';
 
@@ -37,7 +37,7 @@ Future<void> _initSystem() async {
   await HiveUtil().init();
   unawaited(
     // Rust 库加载失败不阻塞启动，但必须记录——否则所有 Rust 功能会"静默失效"
-    RustLib.init().catchError((Object e, StackTrace s) {
+    RustUtil.ensureInitialized().catchError((Object e, StackTrace s) {
       logger.f('RustLib init failed', error: e, stackTrace: s);
     }),
   );

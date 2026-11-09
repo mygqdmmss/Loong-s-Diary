@@ -98,9 +98,9 @@ class LaboratoryLogic extends GetxController {
     }
   }
 
-  bool generateFTSAndKeyword() {
+  Future<bool> generateFTSAndKeyword() async {
     try {
-      IsarUtil.mergeToV2_7_4(FileUtil.getRealPath('database', ''));
+      await IsarUtil.mergeToV2_7_4(FileUtil.getRealPath('database', ''));
       return true;
     } catch (e) {
       return false;

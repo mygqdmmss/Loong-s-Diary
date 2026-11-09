@@ -126,7 +126,7 @@ class LaboratoryPage extends StatelessWidget {
               const Gap(12),
               ListTile(
                 onTap: () async {
-                  final res = logic.generateFTSAndKeyword();
+                  final res = await logic.generateFTSAndKeyword();
                   if (res) {
                     toast.success(message: '重新生成成功');
                   } else {

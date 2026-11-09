@@ -16,7 +16,8 @@ import 'package:moodiary/components/quill_embed/audio_embed.dart';
 import 'package:moodiary/components/quill_embed/image_embed.dart';
 import 'package:moodiary/components/quill_embed/video_embed.dart';
 import 'package:moodiary/persistence/pref.dart';
-import 'package:moodiary/src/rust/api/jieba.dart';
+import 'package:moodiary/persistence/isar_backup.dart';
+import 'package:moodiary/utils/diary_text_analysis.dart';
 import 'package:moodiary/utils/file_util.dart';
 import 'package:moodiary/utils/webdav_util.dart';
 import 'package:path/path.dart';
@@ -25,7 +26,7 @@ import 'package:uuid/uuid.dart';
 class IsarUtil {
   static late final Isar _isar;
 
-  static final _schemas = [DiarySchema, CategorySchema, FontSchema];
+  static const _schemas = IsarBackup.schemas;
 
   static Future<void> initIsar() async {
     _isar = await Isar.openAsync(
@@ -35,24 +36,15 @@ class IsarUtil {
   }
 
   static Future<void> dataMigration(String path) async {
-    final oldIsar = await Isar.openAsync(
-      schemas: _schemas,
-      directory: path,
-      name: 'old',
-    );
-    final List<Diary> oldDiaryList =
-        await oldIsar.diarys.where().findAllAsync();
-    final List<Category> oldCategoryList =
-        await oldIsar.categorys.where().findAllAsync();
-    final List<Font> oldFontList = await oldIsar.fonts.where().findAllAsync();
+    final commit = await prepareDataMigration(join(path, 'old.isar'));
+    await commit();
+  }
 
-    await _isar.writeAsync((isar) {
-      isar.clear();
-      isar.diarys.putAll(oldDiaryList);
-      isar.categorys.putAll(oldCategoryList);
-      isar.fonts.putAll(oldFontList);
-    });
-    oldIsar.close(deleteFromDisk: true);
+  static Future<Future<void> Function()> prepareDataMigration(
+    String databasePath,
+  ) async {
+    final backup = await IsarBackup.read(databasePath);
+    return () => backup.restoreInto(_isar);
   }
 
   //清空数据
@@ -72,9 +64,10 @@ class IsarUtil {
     String path,
     String fileName,
   ) async {
-    final isar = Isar.open(schemas: _schemas, directory: join(dir, 'database'));
+    // Opening the default name returns the live instance. Export a snapshot
+    // without closing that instance, so editing remains available afterwards.
+    final isar = Isar.get(schemas: _schemas);
     isar.copyToFile(join(path, fileName));
-    isar.close();
   }
 
   //插入一条日记
@@ -450,16 +443,8 @@ class IsarUtil {
       );
       for (final diary in diaries) {
         final newContent = diary.contentText.removeLineBreaks();
-        diary.tokenizer = await JiebaRs.cutAll(text: newContent);
-        final keywords = await JiebaRs.extractKeywordsTfidf(
-          text: newContent,
-          topK: BigInt.from(5),
-          allowedPos: [],
-        );
-        final sortByWeight =
-            keywords..sort((a, b) => b.weight.compareTo(a.weight));
-        final sortedKeywords = sortByWeight.map((e) => e.keyword).toList();
-        diary.keywords = sortedKeywords;
+        final analysis = await DiaryTextAnalyzer().analyze(newContent);
+        analysis.applyTo(diary);
         diary.contentText = newContent;
         await _isar.writeAsync((isar) {
           isar.diarys.put(diary);

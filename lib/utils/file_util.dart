@@ -10,10 +10,15 @@ import 'package:moodiary/components/audio_player/audio_player_logic.dart';
 import 'package:moodiary/persistence/isar.dart';
 import 'package:moodiary/persistence/pref.dart';
 import 'package:moodiary/src/rust/api/zip.dart';
+import 'package:moodiary/utils/backup_restore.dart';
+import 'package:moodiary/utils/log_util.dart';
+import 'package:moodiary/utils/rust_util.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:synchronized/synchronized.dart';
 
 class FileUtil {
+  static final _backupLock = Lock();
   static final String _filePath = PrefUtil.getValue<String>('supportPath')!;
 
   static final String _cachePath = PrefUtil.getValue<String>('cachePath')!;
@@ -138,7 +143,10 @@ class FileUtil {
     return fileName;
   }
 
-  static Future<String> zipFileUseRust(Map<String, dynamic> params) async {
+  static Future<String> zipFileUseRust(Map<String, dynamic> params) =>
+      _backupLock.synchronized(() => _zipFileUseRust(params));
+
+  static Future<String> _zipFileUseRust(Map<String, dynamic> params) async {
     final zipPath = params['zipPath'] as String;
     final dataPath = params['dataPath'] as String;
     final datetime = DateTime.now();
@@ -146,18 +154,20 @@ class FileUtil {
       zipPath,
       '心绪日记${datetime.toString().split(' ')[0]}备份.zip',
     );
+    await RustUtil.ensureInitialized();
     final zip = Zip(filePath: filePath);
     try {
+      // Finish the database snapshot before the ZIP writer reads that file.
+      await IsarUtil.exportIsar(
+        dataPath,
+        zipPath,
+        '${datetime.millisecondsSinceEpoch}.isar',
+      );
       await Future.wait([
         zip.addDir(dirPath: join(dataPath, 'image'), basePath: 'image'),
         zip.addDir(dirPath: join(dataPath, 'audio'), basePath: 'audio'),
         zip.addDir(dirPath: join(dataPath, 'video'), basePath: 'video'),
         zip.addDir(dirPath: join(dataPath, 'font'), basePath: 'font'),
-        IsarUtil.exportIsar(
-          dataPath,
-          zipPath,
-          '${datetime.millisecondsSinceEpoch}.isar',
-        ),
         zip.addFile(
           filePath: join(zipPath, '${datetime.millisecondsSinceEpoch}.isar'),
           zipPath: '${datetime.millisecondsSinceEpoch}.isar',
@@ -176,38 +186,18 @@ class FileUtil {
   }
 
   //导入文件
-  static Future<void> extractFile(String path) async {
-    final inputStream = InputFileStream(path);
-    //删除图片文件夹
-    await deleteDir(join(_filePath, 'image'));
-    //删除音频文件夹
-    await deleteDir(join(_filePath, 'audio'));
-    //删除视频文件夹
-    await deleteDir(join(_filePath, 'video'));
-    //重新创建图片文件夹
-    await createDir(join(_filePath, 'image'));
-    //重新创建音频文件夹
-    await createDir(join(_filePath, 'audio'));
-    //重新创建视频文件夹
-    await createDir(join(_filePath, 'video'));
-    //删除字体文件夹
-    await deleteDir(join(_filePath, 'font'));
-    //重新创建字体文件夹
-    await createDir(join(_filePath, 'font'));
-    final archive = ZipDecoder().decodeStream(inputStream);
-    for (final file in archive.files) {
-      //如果是数据库
-      if (file.name.endsWith('.isar')) {
-        final outputStream = OutputFileStream(join(_cachePath, 'old.isar'));
-        file.writeContent(outputStream);
-      } else {
-        final outputStream = OutputFileStream(join(_filePath, file.name));
-        file.writeContent(outputStream);
-      }
-    }
-    //复制数据库
-    await IsarUtil.dataMigration(_cachePath);
-  }
+  static Future<void> extractFile(String path) => _backupLock.synchronized(() {
+    return BackupRestore(
+      extract: (archivePath, destination) async {
+        await RustUtil.ensureInitialized();
+        await Zip.extract(zipPath: archivePath, destDir: destination);
+      },
+      prepareDatabase: IsarUtil.prepareDataMigration,
+      onCleanupError: (error, stack) {
+        logger.e('Backup restore cleanup failed', error: error, stackTrace: stack);
+      },
+    ).restore(archivePath: path, dataPath: _filePath);
+  });
 
   static String getRealPath(String fileType, String fileName) {
     if (fileType == 'thumbnail') {

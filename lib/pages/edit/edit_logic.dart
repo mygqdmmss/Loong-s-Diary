@@ -24,8 +24,8 @@ import 'package:moodiary/components/weather_picker_sheet.dart';
 import 'package:moodiary/l10n/l10n.dart';
 import 'package:moodiary/persistence/isar.dart';
 import 'package:moodiary/router/app_routes.dart';
-import 'package:moodiary/src/rust/api/jieba.dart'; // ignore: unused_import
 import 'package:moodiary/src/rust/api/kmp.dart'; // ignore: unused_import
+import 'package:moodiary/utils/diary_text_analysis.dart';
 import 'package:moodiary/utils/file_util.dart';
 import 'package:moodiary/utils/log_util.dart';
 import 'package:moodiary/utils/markdown_util.dart';
@@ -442,16 +442,12 @@ class EditLogic extends GetxController {
     );
     //保存录音
     final audioNameMap = await MediaUtil.saveAudio(state.audioNameList);
-    // TEMP_PATCH_RUST: replace Rust Kmp.replaceWithKmp + Jieba with pure-Dart
     final content = _patchReplaceAll(originContent, {
       ...imageNameMap,
       ...videoNameMap,
       ...audioNameMap,
     });
     final contentText = _toPlainText().removeLineBreaks();
-    final tokenizer = <String>[];
-    final sortedKeywords = <String>[];
-    // END TEMP_PATCH_RUST
     state.currentDiary
       ..title = titleTextEditingController.text
       ..content = content
@@ -460,14 +456,20 @@ class EditLogic extends GetxController {
       ..audioName = state.audioNameList
       ..imageName = imageNameMap.values.toList()
       ..videoName = videoNameMap.values.toList()
-      ..tokenizer = tokenizer
-      ..keywords = sortedKeywords
       ..imageColor = await getCoverColor()
       ..aspect = await getCoverAspect();
 
-    await IsarUtil.updateADiary(
-      oldDiary: state.originalDiary,
-      newDiary: state.currentDiary,
+    await saveDiaryWithAnalysis(
+      diary: state.currentDiary,
+      save: () => IsarUtil.updateADiary(
+        oldDiary: state.originalDiary,
+        newDiary: state.currentDiary,
+      ),
+      onAnalysisError: (error, stackTrace) => logger.e(
+        'Diary text analysis failed; preserving previous keywords',
+        error: error,
+        stackTrace: stackTrace,
+      ),
     );
     state.isNew
         ? Get.back(result: state.currentDiary.categoryId ?? '')
