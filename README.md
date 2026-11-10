@@ -42,7 +42,7 @@ Online services require network access and valid provider configuration. Their e
 | Windows | App project present; requires the Windows desktop toolchain and separate build/runtime verification. |
 | Linux / Web | No top-level app project in this checkout. A Rust plugin's Linux directory does not establish Linux app support. |
 
-Check this fork's [Releases](https://github.com/mygqdmmss/Loong-s-Diary/releases) for published packages and their stated revision. On 2026-11-09, Android ARM64 APK `2.7.3+91` was built locally from `64313aa` with the same signing certificate as the previous APK. This build has not been published as a GitHub release or verified on a physical device. See [development status](docs/DEVELOPMENT.md) for the build and verification scope.
+Check this fork's [Releases](https://github.com/mygqdmmss/Loong-s-Diary/releases) for published packages and their stated revision. On 2026-11-10, Android ARM64 APK `2.7.3+92` with month bags was built locally from `6c8e504`; the earlier build 91 is preserved separately. Both use the previous APK's signing certificate. These packages have not been published as GitHub releases or verified on a physical device. See [development status](docs/DEVELOPMENT.md) for the build and verification scope.
 
 The in-app update checker still points to **upstream Moodiary releases**. It does not currently track releases of this fork.
 

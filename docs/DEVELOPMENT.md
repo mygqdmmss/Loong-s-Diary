@@ -7,7 +7,7 @@
 | 项目 | 当前情况 |
 |---|---|
 | 项目 | Loong-s-Diary，基于 Moodiary 的个人分支 |
-| 应用版本 | [`pubspec.yaml`](../pubspec.yaml) 仍为 `2.7.3+90`；已从 `64313aa` 本地构建 Android APK `2.7.3+91`，构建号通过命令行覆盖，未修改源码版本号 |
+| 应用版本 | [`pubspec.yaml`](../pubspec.yaml) 仍为 `2.7.3+90`；最新本地 Android APK 为 `6c8e504` 的 `2.7.3+92`（月袋界面），先前 `64313aa` 的 build 91 保留。构建号通过命令行覆盖 |
 | Flutter / Dart | [`.fvmrc`](../.fvmrc) 固定 Flutter `3.32.0`；2026-11-09 本机验证使用 Flutter `3.32.8` / Dart `3.8.1`。`pubspec.yaml` 要求 Dart `>=3.8.0` |
 | 界面与状态 | Flutter、GetX、Flutter Quill / Markdown，中英文 ARB 本地化 |
 | 本地数据 | Isar `4.0.0-dev.14` 保存日记、分类和字体；偏好设置、缓存与媒体文件另行存储 |
@@ -24,6 +24,7 @@
 | 2026-11-09，`cca6d84` | 恢复自动分词与关键词，统一等待 Rust 初始化；备份导入增加暂存校验、数据库校验、目录替换和异常回滚 |
 | 2026-11-09，文档与界面文案对齐 | 更新 README、当前开发状态入口和历史计划，修正天气 / 定位、旧和风天气配置、关键词重新生成入口的说明 |
 | 2026-11-09，Android 本地安装包 | 从 `64313aa` 构建 `2.7.3+91` ARM64 Release APK；签名、包名、ZIP 完整性和对齐检查通过，尚未安装到真机 |
+| 2026-11-10，`6c8e504`，月袋与每日光影 | 新增可切换的月份包裹、每日照片 / 摘句气泡及当天日记阅读，支持分类与实时更新；完成 build 92 APK 和包校验 |
 
 ## 已实现功能与使用边界
 
@@ -70,7 +71,7 @@
 | 平台 / 路径 | 验证边界 |
 |---|---|
 | Windows 开发环境 | 上述 Flutter 测试和真实 Isar 测试已记录通过；依赖解析曾提示 Windows 符号链接支持不可用，本轮未修改系统设置或验证桌面应用完整构建 |
-| Android | 已本地构建 `64313aa` 的 `2.7.3+91` ARM64 Release APK 并完成包内容与签名校验；未连接 Android 设备，历史天气计划及本次修复仍缺少逐项真机验收记录 |
+| Android | 已构建 build 91 与带月袋界面的 build 92 ARM64 Release APK，并完成包内容与签名校验；未连接 Android 设备，仍缺少逐项真机验收记录 |
 | iOS / macOS | 仓库保留平台工程，本轮未构建或真机验证 |
 | Rust / Zstd 目标设备往返 | 尚未在目标设备验证真实 Rust 导出、导入、媒体和数据库的一整套往返；Dart 测试与真实 Isar 测试不能替代该验收 |
 
@@ -82,6 +83,18 @@
 - SHA-256：`94fea9ae256423a11e4236b9d7dcb1aff742e440ee89a12ab21ee2b3123fa05e`。
 - CargoKit 未识别 Flutter 插件，使用仓库已有的 Android 原生库；APK 中经过符号裁剪的 Rust 库与旧 APK 逐字节相同。此次修复没有修改 Rust 源码或生成的桥接文件。
 - APK 包含关键词、备份可靠性和文案修复；月份包裹新界面不包含在 build 91 中，后续实现和 build 92 记录另列。本次未发布 GitHub Release，也未进行设备安装或运行验证。
+
+### 月袋版本 build 92 验证与安装包（2026-11-10）
+
+- 源码：`6c8e50466db64815922c78941a43acb07ee6ce78`，分支 `codex/monthly-memories`。
+- 文件：`build/releases/Loongs-Diary-2.7.3-build92-6c8e504-arm64.apk`，74,415,161 字节（约 71.0 MiB）。旁附 SHA-256 与 `BUILD92-INFO.txt`；build 91 未覆盖。
+- SHA-256：`4de4fad579ee8e94ae1d9413d1250d6b5b7cace1f16c76d0c231e2a8bd0a76ff`。
+- 使用 Flutter 3.32.8 / Dart 3.8.1 与 conda `py313` 工具链，命令为 `flutter --no-version-check build apk --release --target-platform android-arm64 --build-name=2.7.3 --build-number=92 --no-pub`。
+- 最终源码完整测试 **128 项通过，0 项失败**；变更 Dart 文件静态分析无诊断。真实 Flutter 组件的 9 项渲染 / 交互检查及 2 项摘句月袋深浅色检查通过，涵盖 320px / 1.8 倍文字与 31 天点击可达性。测试使用合成内容；未读写用户日记，未将示例照片或字体加入应用。
+- 独立审阅通过，审阅中发现的纯文字月袋缺少真实摘句已修复并复核。没有待处理的阻断项。
+- 包名 `cn.yooss.moodiary.loongs`，构建号 92，ARM64，最低 API 26，目标 API 36；APK v2 / v3 签名、ZIP 完整性与 zipalign 校验通过，签名证书与 build 91 一致。
+- CargoKit 仍未识别 Flutter 插件；包中的 Rust 原生库与 build 91 逐字节相同，本轮未修改 Rust 源码、桥接或原生库。
+- 应用内入口：**首页右上角展示菜单 → 月袋**。尚未连接真机安装或验证原生运行，也未上传 GitHub Release。
 
 ## 开发入口
 

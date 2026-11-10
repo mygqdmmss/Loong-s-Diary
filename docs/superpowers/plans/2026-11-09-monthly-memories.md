@@ -56,7 +56,7 @@
 - [x] Add lazy month covers, month switching, daily bubble page and daily entry page. Subscribe/unsubscribe collection changes, surface retry/empty states, and use mounted checks across awaits.
 - [x] Route into existing editable details; refresh registered home lists safely after return without assuming the diary exists in a paginated list.
 - [x] Add bilingual user copy, regenerate localization, run navigation and full tests and changed-file analysis.
-- [ ] Review actual Flutter screenshots, complete independent whole-change review, fix findings, build and verify signed ARM64 APK build 92, update development status.
+- [x] Review actual Flutter screenshots, complete independent whole-change review, fix findings, build and verify signed ARM64 APK build 92, update development status.
 
 ## Progress and rulings
 
@@ -75,3 +75,10 @@
 - Nine scratch Flutter rendering/interaction checks passed using synthetic entries and photos, including integrated month/day pages at 320px with 1.8x text and dark420. Screenshots inspected directly; sample content/fonts were not added to app assets.
 - Independent component review passed. Whole-change review found one gap: actual text notes in all-text month bags. A focused red/green test verifies the correction at320px/1.8x text; final scoped review is recorded with the artifact results below.
 - All work remains in the existing managed worktree on codex/monthly-memories. The original D:/Code/Loong-s-Diary checkout and user .vscode files are untouched.
+
+## Completed artifact
+
+- Code commit 6c8e504; final scoped re-review: spec PASS, quality PASS, no remaining actionable findings. Two additional 320px/1.8x light/dark real-note visual checks passed and were inspected.
+- Final build 92 succeeded in 166.2s after final source patch. APK size 74415161 bytes, SHA-256 `4de4fad579ee8e94ae1d9413d1250d6b5b7cace1f16c76d0c231e2a8bd0a76ff`.
+- Package/version, ARM64 ABI, v2/v3 signing, zipalign and ZIP CRC checks passed. Signature matches build 91; stripped Rust library byte-identical. Build 91 preserved, no device installation or GitHub Release performed.
+- Artifact: `build/releases/Loongs-Diary-2.7.3-build92-6c8e504-arm64.apk`; details in `docs/DEVELOPMENT.md` and local `build/releases/BUILD92-INFO.txt`.
