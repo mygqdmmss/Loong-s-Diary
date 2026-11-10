@@ -6,6 +6,10 @@ Personal-fork changes are recorded first. The upstream Moodiary history is prese
 
 These entries describe source changes in [mygqdmmss/Loong-s-Diary](https://github.com/mygqdmmss/Loong-s-Diary), not published app releases. See [the development status](docs/DEVELOPMENT.md) for verification and platform limitations.
 
+### 2026-11-10
+
+- Corrected Android release preparation after builds 91/92 omitted the generated native plugin registrant and could stall before the first Flutter frame. Added an Android-only generation helper, a Gradle preflight guard, and a DEX-level APK registration check. No diary data or database format changes.
+
 ### 2026-11-09
 
 - Added an optional monthly home view: paper month bags open into floating daily photo/text bubbles, then that day's entries and the existing editor. Category filtering, local calendar boundaries and live updates after diary changes are preserved; earlier months are independent of home pagination.

@@ -89,3 +89,20 @@ dependencies {
     implementation 'com.google.android.material:material:1.12.0'
 }
 
+// A fresh worktree lacks Flutter's ignored Java registrant. --no-pub also
+// skips generating it, yet a release can still compile and hang before runApp.
+def verifyFlutterPluginRegistrant = tasks.register("verifyFlutterPluginRegistrant") {
+    doLast {
+        def registrant = file("src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java")
+        if (!registrant.isFile() || !registrant.getText("UTF-8").contains("SharedPreferencesPlugin")) {
+            throw new GradleException("Flutter Android plugin registration is missing. " +
+                "Complete flutter pub get before using --no-pub, or run " +
+                "tool/generate_android_plugins.ps1 with -FlutterSdk on Windows. " +
+                "Do not distribute an APK without GeneratedPluginRegistrant.")
+        }
+    }
+}
+tasks.named("preBuild").configure {
+    dependsOn(verifyFlutterPluginRegistrant)
+}
+
