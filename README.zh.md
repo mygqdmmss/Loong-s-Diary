@@ -42,7 +42,7 @@ Android release 的应用名称为 **Loongs Diary**。Dart 包名和部分平台
 | Windows | 有应用工程，需要 Windows 桌面工具链，并分别验证构建与运行。 |
 | Linux / Web | 当前没有顶层应用工程。Rust 插件中的 Linux 目录不代表已支持 Linux 应用。 |
 
-如需已发布的安装包，请查看本 fork 的 [Releases](https://github.com/mygqdmmss/Loong-s-Diary/releases) 及其中标注的源码版本。最新本地 Android ARM64 包为 `b8c5c78` 的 `2.7.3+93`，修复了 build 91 / 92 缺少原生插件注册的问题；**不要再安装或分发 build 91 / 92**。build 93 沿用原包名与签名，可直接覆盖更新。本次未发布 GitHub Release，用户手机上的启动结果尚待确认。见[开发状态](docs/DEVELOPMENT.md)及[安卓打包检查](docs/ANDROID_RELEASE.md)。
+如需已发布的安装包，请查看本 fork 的 [Releases](https://github.com/mygqdmmss/Loong-s-Diary/releases) 及其中标注的源码版本。最新本地 Android ARM64 包为 `b8c5c78` 的 `2.7.3+93`，修复了 build 91 / 92 缺少原生插件注册的问题；**不要再安装或分发 build 91 / 92**。build 93 沿用原包名与签名；2026-11-10 用户确认覆盖更新后可正常进入应用。本次未发布 GitHub Release，其他功能仍未逐项真机验收。见[开发状态](docs/DEVELOPMENT.md)及[安卓打包检查](docs/ANDROID_RELEASE.md)。
 
 应用内的更新检查目前仍指向 **Moodiary 上游 Release**，尚未跟踪本 fork 的发布。
 

@@ -42,7 +42,7 @@ Online services require network access and valid provider configuration. Their e
 | Windows | App project present; requires the Windows desktop toolchain and separate build/runtime verification. |
 | Linux / Web | No top-level app project in this checkout. A Rust plugin's Linux directory does not establish Linux app support. |
 
-Check this fork's [Releases](https://github.com/mygqdmmss/Loong-s-Diary/releases) for published packages and their stated revision. The latest local Android ARM64 package is `2.7.3+93` from `b8c5c78`. It fixes omitted native plugin registration in builds 91/92; **do not install or distribute builds 91/92**. Build 93 preserves the existing package ID/signature for an in-place update. It has not been published as a GitHub release or launched on the user's device. See [development status](docs/DEVELOPMENT.md) and [Android release checks](docs/ANDROID_RELEASE.md).
+Check this fork's [Releases](https://github.com/mygqdmmss/Loong-s-Diary/releases) for published packages and their stated revision. The latest local Android ARM64 package is `2.7.3+93` from `b8c5c78`. It fixes omitted native plugin registration in builds 91/92; **do not install or distribute builds 91/92**. Build 93 preserves the existing package ID/signature for an in-place update. On 2026-11-10, the user confirmed that the updated app launches successfully on their phone. It has not been published as a GitHub release; other features have not received comprehensive device testing. See [development status](docs/DEVELOPMENT.md) and [Android release checks](docs/ANDROID_RELEASE.md).
 
 The in-app update checker still points to **upstream Moodiary releases**. It does not currently track releases of this fork.
 
