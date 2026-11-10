@@ -2,12 +2,14 @@
 
 更新日期：2026-11-10。本文用于说明这个个人维护分支的实际进度；历史设计和实施计划见文末链接。
 
+**安装包更正：build 91 / 92 已确认缺少 Android 原生插件注册入口，可能卡在启动图标，不应继续安装或分发。请使用下方的 build 93 修正版。之前的签名 / ZIP 校验不涵盖插件注册与真实启动。**
+
 ## 版本与技术栈
 
 | 项目 | 当前情况 |
 |---|---|
 | 项目 | Loong-s-Diary，基于 Moodiary 的个人分支 |
-| 应用版本 | [`pubspec.yaml`](../pubspec.yaml) 仍为 `2.7.3+90`；最新本地 Android APK 为 `6c8e504` 的 `2.7.3+92`（月袋界面），先前 `64313aa` 的 build 91 保留。构建号通过命令行覆盖 |
+| 应用版本 | [`pubspec.yaml`](../pubspec.yaml) 仍为 `2.7.3+90`；最新本地 Android APK 为 `b8c5c78` 的 `2.7.3+93`，含月袋及插件注册打包修复。构建号通过命令行覆盖；91 / 92 仅留作审计 |
 | Flutter / Dart | [`.fvmrc`](../.fvmrc) 固定 Flutter `3.32.0`；2026-11-09 本机验证使用 Flutter `3.32.8` / Dart `3.8.1`。`pubspec.yaml` 要求 Dart `>=3.8.0` |
 | 界面与状态 | Flutter、GetX、Flutter Quill / Markdown，中英文 ARB 本地化 |
 | 本地数据 | Isar `4.0.0-dev.14` 保存日记、分类和字体；偏好设置、缓存与媒体文件另行存储 |
@@ -25,6 +27,7 @@
 | 2026-11-09，文档与界面文案对齐 | 更新 README、当前开发状态入口和历史计划，修正天气 / 定位、旧和风天气配置、关键词重新生成入口的说明 |
 | 2026-11-09，Android 本地安装包 | 从 `64313aa` 构建 `2.7.3+91` ARM64 Release APK；签名、包名、ZIP 完整性和对齐检查通过，尚未安装到真机 |
 | 2026-11-10，`6c8e504`，月袋与每日光影 | 新增可切换的月份包裹、每日照片 / 摘句气泡及当天日记阅读，支持分类与实时更新；完成 build 92 APK 和包校验 |
+| 2026-11-10，`b8c5c78`，Android 启动打包修复 | 用户反馈覆盖更新卡启动图标；查明生成的 Java 插件注册文件未随新 worktree 生成，`--no-pub` 又跳过生成。补齐 34 项注册，加入构建前守卫与 DEX 检查，重打 build 93；未改用户数据或数据库格式 |
 
 ## 已实现功能与使用边界
 
@@ -77,6 +80,17 @@
 
 ### Android 安装包记录
 
+#### build 93：插件注册修正版
+
+- 源码 `b8c5c783b7955c0ad3281d9008cf3846529812cb`；文件 `build/releases/Loongs-Diary-2.7.3-build93-b8c5c78-arm64.apk`，75,768,392 字节（约 72.3 MiB），旁附 `BUILD93-INFO.txt`。
+- SHA-256：`6c2ff2cba91322ee8723c2348c4e35267fe2cb9c7fc9f28df67371637ff8e743`。
+- 已验证最终 DEX 中实际存在 `GeneratedPluginRegistrant` 和有实现的 public static `registerWith`。同一检查对原 build 90 通过，对缺陷包 91 / 92 失败；工具 9 项接受检查通过，构建前守卫完成缺失时失败 / 生成后通过的验证，独立审阅通过。
+- 当前 Flutter 3.32.8 SDK 正式生成 34 个 Java 插件注册项，另 2 个为 FFI 插件。修复包构建成功（386.6 秒）；包名 `cn.yooss.moodiary.loongs`、构建号 93、ARM64、最低 API 26、目标 API 36。v2 / v3 签名、ZIP CRC 及 16 KB 对齐检查通过，签名与原包一致，Rust 库逐字节不变。
+- 此次只修复构建与校验流程，未改 Dart 应用逻辑、日记数据库结构或备份格式。保留现有应用直接覆盖更新；不要卸载或清空数据。用户暂时无法连接 USB，真机启动结果仍待确认。
+- 生成与检查操作见 [ANDROID_RELEASE.md](ANDROID_RELEASE.md)。APK 仍是本地产物，未发布 GitHub Release。
+
+#### build 91 历史记录（已撤回）
+
 - 文件：`build/releases/Loongs-Diary-2.7.3-build91-64313aa-arm64.apk`，74,283,065 字节（约 70.8 MiB）；该目录是本地产物，不进入版本控制。
 - 构建命令：`flutter --no-version-check build apk --release --target-platform android-arm64 --build-name=2.7.3 --build-number=91 --no-pub`。
 - 包名 `cn.yooss.moodiary.loongs`，最低 API 26，目标 API 36；APK v2 / v3 签名验证通过，签名证书与 2026-07-11 的旧 APK 一致，构建号由 90 增至 91。
@@ -84,7 +98,7 @@
 - CargoKit 未识别 Flutter 插件，使用仓库已有的 Android 原生库；APK 中经过符号裁剪的 Rust 库与旧 APK 逐字节相同。此次修复没有修改 Rust 源码或生成的桥接文件。
 - APK 包含关键词、备份可靠性和文案修复；月份包裹新界面不包含在 build 91 中，后续实现和 build 92 记录另列。本次未发布 GitHub Release，也未进行设备安装或运行验证。
 
-### 月袋版本 build 92 验证与安装包（2026-11-10）
+### 月袋版本 build 92 历史验证（已撤回）
 
 - 源码：`6c8e50466db64815922c78941a43acb07ee6ce78`，分支 `codex/monthly-memories`。
 - 文件：`build/releases/Loongs-Diary-2.7.3-build92-6c8e504-arm64.apk`，74,415,161 字节（约 71.0 MiB）。旁附 SHA-256 与 `BUILD92-INFO.txt`；build 91 未覆盖。
