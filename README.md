@@ -12,6 +12,7 @@ See [current development status](docs/DEVELOPMENT.md) for implementation and ver
 
 - Local diary storage with plain text, Markdown and rich-text editors; photos, audio, video and drawing attachments.
 - Search, categories, mood records and statistics; local Rust/Jieba keyword extraction for diary metadata.
+- Optional **month bags** in the home display menu: open a paper bag to explore one photo or text bubble per day, then read and edit that day's entries. List/grid views and category filtering remain available.
 - Light/dark themes, custom colors and font imports; password and biometric app unlocking where supported by the device.
 - Full-backup import/export, individual diary sharing, LAN transfer and the existing WebDAV sync implementation.
 - Manual weather selection: **14 presets and −30 to 50 °C**, with no weather API key required.

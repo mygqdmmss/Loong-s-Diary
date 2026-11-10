@@ -114,7 +114,8 @@ class DiaryLogic extends GetxController with GetTickerProviderStateMixin {
       lastScrollOffset = offset;
       await homeLogic.showNavigatorBar();
     }
-    if (offset == maxScrollExtent) {
+    if (offset == maxScrollExtent &&
+        state.viewModeType.value != ViewModeType.monthly) {
       if (tabController.index == 0) {
         await Bind.find<DiaryTabViewLogic>(tag: 'default').paginationDiary();
       } else {
@@ -150,10 +151,9 @@ class DiaryLogic extends GetxController with GetTickerProviderStateMixin {
   void checkPageChange() {
     state.currentTabBarIndex = tabController.index;
     // 获取当前分类ID，若为默认分类，设为 'default'
-    final String categoryId =
-        state.currentTabBarIndex == 0
-            ? 'default'
-            : state.categoryList[state.currentTabBarIndex - 1].id;
+    final String categoryId = state.currentTabBarIndex == 0
+        ? 'default'
+        : state.categoryList[state.currentTabBarIndex - 1].id;
     // 遍历 keyMap，更新每个分类的状态
     state.keyMap.forEach((k, v) {
       v.currentState?.onPageChange(k == categoryId);

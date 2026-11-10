@@ -824,6 +824,102 @@ abstract class AppLocalizations {
   /// **'网格视图'**
   String get diaryViewModeGrid;
 
+  /// No description provided for @diaryViewModeMonthly.
+  ///
+  /// In zh, this message translates to:
+  /// **'月袋'**
+  String get diaryViewModeMonthly;
+
+  /// No description provided for @monthlyCollectionTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'把日子，装进月袋。'**
+  String get monthlyCollectionTitle;
+
+  /// No description provided for @monthlySummary.
+  ///
+  /// In zh, this message translates to:
+  /// **'{days} 天的片刻 · {entries} 篇日记'**
+  String monthlySummary(int days, int entries);
+
+  /// No description provided for @monthlyOpen.
+  ///
+  /// In zh, this message translates to:
+  /// **'拆开这个月'**
+  String get monthlyOpen;
+
+  /// No description provided for @monthlyDayLabel.
+  ///
+  /// In zh, this message translates to:
+  /// **'{day} 日'**
+  String monthlyDayLabel(int day);
+
+  /// No description provided for @monthlyEntryCount.
+  ///
+  /// In zh, this message translates to:
+  /// **'{count} 篇日记'**
+  String monthlyEntryCount(int count);
+
+  /// No description provided for @monthlyEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'还没有装进月袋的日子。'**
+  String get monthlyEmpty;
+
+  /// No description provided for @monthlyEmptyDay.
+  ///
+  /// In zh, this message translates to:
+  /// **'这一天还没有可显示的日记。'**
+  String get monthlyEmptyDay;
+
+  /// No description provided for @monthlyLoadError.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂时没能打开这些回忆。'**
+  String get monthlyLoadError;
+
+  /// No description provided for @monthlyRetry.
+  ///
+  /// In zh, this message translates to:
+  /// **'再试一次'**
+  String get monthlyRetry;
+
+  /// No description provided for @monthlyUntitled.
+  ///
+  /// In zh, this message translates to:
+  /// **'无题'**
+  String get monthlyUntitled;
+
+  /// No description provided for @monthlyAudioMemory.
+  ///
+  /// In zh, this message translates to:
+  /// **'一段声音'**
+  String get monthlyAudioMemory;
+
+  /// No description provided for @monthlyVideoMemory.
+  ///
+  /// In zh, this message translates to:
+  /// **'一段影像'**
+  String get monthlyVideoMemory;
+
+  /// No description provided for @monthlyTextMemory.
+  ///
+  /// In zh, this message translates to:
+  /// **'留在这一天的文字'**
+  String get monthlyTextMemory;
+
+  /// No description provided for @monthlyChooseMonth.
+  ///
+  /// In zh, this message translates to:
+  /// **'换一个月份'**
+  String get monthlyChooseMonth;
+
+  /// No description provided for @monthlyReadEntry.
+  ///
+  /// In zh, this message translates to:
+  /// **'展开这一篇'**
+  String get monthlyReadEntry;
+
   /// No description provided for @diaryTabViewEmpty.
   ///
   /// In zh, this message translates to:

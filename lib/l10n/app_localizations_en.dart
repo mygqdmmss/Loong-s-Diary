@@ -383,6 +383,78 @@ class AppLocalizationsEn extends AppLocalizations {
   String get diaryViewModeGrid => 'Grid view';
 
   @override
+  String get diaryViewModeMonthly => 'Month bags';
+
+  @override
+  String get monthlyCollectionTitle => 'A pocketful of days.';
+
+  @override
+  String monthlySummary(int days, int entries) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      entries,
+      locale: localeName,
+      other: '$entries entries',
+      one: '1 entry',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String get monthlyOpen => 'Open this month';
+
+  @override
+  String monthlyDayLabel(int day) {
+    return '$day';
+  }
+
+  @override
+  String monthlyEntryCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entries',
+      one: '1 entry',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get monthlyEmpty => 'Your month bags are waiting for a first memory.';
+
+  @override
+  String get monthlyEmptyDay => 'There are no entries to show for this day.';
+
+  @override
+  String get monthlyLoadError => 'These memories could not be loaded.';
+
+  @override
+  String get monthlyRetry => 'Try again';
+
+  @override
+  String get monthlyUntitled => 'Untitled';
+
+  @override
+  String get monthlyAudioMemory => 'An audio memory';
+
+  @override
+  String get monthlyVideoMemory => 'A video memory';
+
+  @override
+  String get monthlyTextMemory => 'Words from this day';
+
+  @override
+  String get monthlyChooseMonth => 'Choose another month';
+
+  @override
+  String get monthlyReadEntry => 'Read this entry';
+
+  @override
   String get diaryTabViewEmpty => 'Nothing here yet';
 
   @override

@@ -16,6 +16,7 @@ import 'package:moodiary/components/quill_embed/audio_embed.dart';
 import 'package:moodiary/components/quill_embed/image_embed.dart';
 import 'package:moodiary/components/quill_embed/video_embed.dart';
 import 'package:moodiary/persistence/pref.dart';
+import 'package:moodiary/persistence/monthly_diary_repository.dart';
 import 'package:moodiary/persistence/isar_backup.dart';
 import 'package:moodiary/utils/diary_text_analysis.dart';
 import 'package:moodiary/utils/file_util.dart';
@@ -25,6 +26,9 @@ import 'package:uuid/uuid.dart';
 
 class IsarUtil {
   static late final Isar _isar;
+
+  static final MonthlyDiaryRepository monthlyDiarySource =
+      MonthlyDiaryRepository(_isar);
 
   static const _schemas = IsarBackup.schemas;
 

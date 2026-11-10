@@ -8,6 +8,7 @@ These entries describe source changes in [mygqdmmss/Loong-s-Diary](https://githu
 
 ### 2026-11-09
 
+- Added an optional monthly home view: paper month bags open into floating daily photo/text bubbles, then that day's entries and the existing editor. Category filtering, local calendar boundaries and live updates after diary changes are preserved; earlier months are independent of home pagination.
 - Restored Jieba tokenization and TF-IDF keyword extraction. Analysis failures preserve existing derived data and allow diary text to be saved; empty text clears derived data.
 - Made the laboratory keyword rebuild await completion. Diary search remains case-insensitive title/body substring matching, with all whitespace-separated terms required.
 - Hardened backup imports with archive validation, database validation, staging and rollback, committing the database last. Exports keep the active database open and retain the existing Rust ZIP format.

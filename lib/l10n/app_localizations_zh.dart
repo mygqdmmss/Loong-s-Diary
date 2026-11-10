@@ -376,6 +376,60 @@ class AppLocalizationsZh extends AppLocalizations {
   String get diaryViewModeGrid => '网格视图';
 
   @override
+  String get diaryViewModeMonthly => '月袋';
+
+  @override
+  String get monthlyCollectionTitle => '把日子，装进月袋。';
+
+  @override
+  String monthlySummary(int days, int entries) {
+    return '$days 天的片刻 · $entries 篇日记';
+  }
+
+  @override
+  String get monthlyOpen => '拆开这个月';
+
+  @override
+  String monthlyDayLabel(int day) {
+    return '$day 日';
+  }
+
+  @override
+  String monthlyEntryCount(int count) {
+    return '$count 篇日记';
+  }
+
+  @override
+  String get monthlyEmpty => '还没有装进月袋的日子。';
+
+  @override
+  String get monthlyEmptyDay => '这一天还没有可显示的日记。';
+
+  @override
+  String get monthlyLoadError => '暂时没能打开这些回忆。';
+
+  @override
+  String get monthlyRetry => '再试一次';
+
+  @override
+  String get monthlyUntitled => '无题';
+
+  @override
+  String get monthlyAudioMemory => '一段声音';
+
+  @override
+  String get monthlyVideoMemory => '一段影像';
+
+  @override
+  String get monthlyTextMemory => '留在这一天的文字';
+
+  @override
+  String get monthlyChooseMonth => '换一个月份';
+
+  @override
+  String get monthlyReadEntry => '展开这一篇';
+
+  @override
   String get diaryTabViewEmpty => '这里一片荒芜';
 
   @override

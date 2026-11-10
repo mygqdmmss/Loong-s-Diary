@@ -6,6 +6,8 @@ import 'package:moodiary/components/base/loading.dart';
 import 'package:moodiary/components/diary_card/grid_diary_card_view.dart';
 import 'package:moodiary/components/diary_card/list_diary_card_view.dart';
 import 'package:moodiary/l10n/l10n.dart';
+import 'package:moodiary/components/monthly_diary/monthly_diary_sliver.dart';
+import 'package:moodiary/persistence/isar.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
@@ -97,18 +99,28 @@ class DiaryTabViewComponent extends StatelessWidget {
           slivers: [
             SliverOverlapInjector(handle: sliverHandle),
             Obx(() {
+              if (logic.diaryLogic.state.viewModeType.value ==
+                  ViewModeType.monthly) {
+                return MonthlyDiarySliver(
+                  key: ValueKey('monthly-$logicTag'),
+                  source: IsarUtil.monthlyDiarySource,
+                  categoryId: categoryId,
+                );
+              }
               return SliverAnimatedSwitcher(
                 duration: const Duration(milliseconds: 150),
                 reverseDuration: const Duration(milliseconds: 100),
-                child:
-                    state.isFetching.value
-                        ? _buildPlaceholder(placeholderHeight)
-                        : state.diaryList.isEmpty
-                        ? _buildEmpty(context, placeholderHeight)
-                        : switch (logic.diaryLogic.state.viewModeType.value) {
-                          ViewModeType.list => buildList(),
-                          ViewModeType.grid => buildGrid(),
-                        },
+                child: state.isFetching.value
+                    ? _buildPlaceholder(placeholderHeight)
+                    : state.diaryList.isEmpty
+                    ? _buildEmpty(context, placeholderHeight)
+                    : switch (logic.diaryLogic.state.viewModeType.value) {
+                        ViewModeType.list => buildList(),
+                        ViewModeType.grid => buildGrid(),
+                        ViewModeType.monthly => throw StateError(
+                          'Monthly view handled above',
+                        ),
+                      },
               );
             }),
           ],

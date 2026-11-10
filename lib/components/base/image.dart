@@ -100,6 +100,7 @@ class MoodiaryImage extends StatefulWidget {
   final BorderRadius? borderRadius;
   final bool showBorder;
   final EdgeInsets? padding;
+  final WidgetBuilder? errorBuilder;
 
   const MoodiaryImage({
     super.key,
@@ -111,6 +112,7 @@ class MoodiaryImage extends StatefulWidget {
     this.borderRadius,
     this.showBorder = false,
     this.padding,
+    this.errorBuilder,
   });
 
   @override
@@ -123,6 +125,7 @@ class _MoodiaryImageState extends State<MoodiaryImage> {
   );
 
   late _ImageState _imageState;
+  int _request = 0;
 
   @override
   void initState() {
@@ -146,12 +149,14 @@ class _MoodiaryImageState extends State<MoodiaryImage> {
   }
 
   void _loadImage() async {
+    final request = ++_request;
     _loadState.value = _ImageLoadState.loading;
     try {
       //logger.d('Image loaded from path: ${widget.imagePath}');
       final imageAspect = await ImageCacheUtil().getImageAspectRatioWithCache(
         imagePath: widget.imagePath,
       );
+      if (!mounted || request != _request) return;
 
       final imageSize = widget.size;
       final width =
@@ -165,6 +170,7 @@ class _MoodiaryImageState extends State<MoodiaryImage> {
         imageHeight: height * 2,
         imageAspectRatio: imageAspect,
       );
+      if (!mounted || request != _request) return;
 
       _imageState = _ImageState(
         width: width,
@@ -175,6 +181,7 @@ class _MoodiaryImageState extends State<MoodiaryImage> {
 
       _loadState.value = _ImageLoadState.success;
     } catch (e) {
+      if (!mounted || request != _request) return;
       _loadState.value = _ImageLoadState.error;
     }
   }
@@ -235,7 +242,8 @@ class _MoodiaryImageState extends State<MoodiaryImage> {
               case _ImageLoadState.loading:
                 return const _LoadingPlaceholder(key: ValueKey('loading'));
               case _ImageLoadState.error:
-                return const _ErrorPlaceholder(key: ValueKey('error'));
+                return widget.errorBuilder?.call(context) ??
+                    const _ErrorPlaceholder(key: ValueKey('error'));
               case _ImageLoadState.success:
                 final imagePath = _imageState.path;
                 final width = _imageState.width;
@@ -270,7 +278,7 @@ class _MoodiaryImageState extends State<MoodiaryImage> {
                         width: width.toDouble(),
                         height: height.toDouble(),
                         imageErrorBuilder: (_, __, ___) {
-                          return const _ErrorPlaceholder(
+                          return widget.errorBuilder?.call(context) ?? const _ErrorPlaceholder(
                             key: ValueKey('image_error'),
                           );
                         },

@@ -1,6 +1,6 @@
 # 当前开发状态
 
-更新日期：2026-11-09。本文用于说明这个个人维护分支的实际进度；历史设计和实施计划见文末链接。
+更新日期：2026-11-10。本文用于说明这个个人维护分支的实际进度；历史设计和实施计划见文末链接。
 
 ## 版本与技术栈
 
@@ -30,6 +30,7 @@
 | 功能 | 当前行为 |
 |---|---|
 | 日记与整理 | 已有文本、富文本和 Markdown 编辑，多媒体、分类、标签、日历、统计和回收站等界面与实现；本轮没有逐项做设备验收 |
+| 月袋与每日光影 | 首页右上角展示菜单新增「月袋」。纸质月份包裹 → 每天一个照片 / 摘句气泡 → 当天一篇或多篇日记 → 原有详情和编辑；支持分类、月份切换、纯文字与媒体占位，旧月份不受首页分页限制。按本地日历日期分组，修改日期 / 分类、回收后自动更新；深浅主题、大字号和减少动态效果均有对应处理 |
 | 天气 | 用户手选 14 种天气和 `-30～50°C` 温度，默认沿用当前记录，无法识别时回退到晴 / `20°C`；不自动获取实况天气或预报 |
 | 地点 | 使用 `geolocator` 取坐标，交给系统地理编码服务反查地名；已有坐标但反查失败时显示经纬度，无法定位时保留原地点。系统服务本身可能依赖网络，不能保证断网时返回地名 |
 | 自动关键词 | 保存时通过 Rust/Jieba 分词并提取最多 5 个 TF-IDF 关键词；完整分析成功才更新派生字段，失败保留已有值并继续保存正文，空正文清空派生字段。已有日记可从实验室入口重新生成 |
@@ -80,7 +81,7 @@
 - 包名 `cn.yooss.moodiary.loongs`，最低 API 26，目标 API 36；APK v2 / v3 签名验证通过，签名证书与 2026-07-11 的旧 APK 一致，构建号由 90 增至 91。
 - SHA-256：`94fea9ae256423a11e4236b9d7dcb1aff742e440ee89a12ab21ee2b3123fa05e`。
 - CargoKit 未识别 Flutter 插件，使用仓库已有的 Android 原生库；APK 中经过符号裁剪的 Rust 库与旧 APK 逐字节相同。此次修复没有修改 Rust 源码或生成的桥接文件。
-- APK 包含关键词、备份可靠性和文案修复；月份包裹新界面仍在设计预览阶段，不包含在此 APK 中。本次未发布 GitHub Release，也未进行设备安装或运行验证。
+- APK 包含关键词、备份可靠性和文案修复；月份包裹新界面不包含在 build 91 中，后续实现和 build 92 记录另列。本次未发布 GitHub Release，也未进行设备安装或运行验证。
 
 ## 开发入口
 
@@ -118,6 +119,7 @@ flutter run -d <device-id>
 | 文本分析与搜索 | [`lib/utils/diary_text_analysis.dart`](../lib/utils/diary_text_analysis.dart)、[`lib/components/search_sheet/`](../lib/components/search_sheet/)、[`lib/persistence/isar.dart`](../lib/persistence/isar.dart) |
 | 备份导入与导出 | [`lib/utils/file_util.dart`](../lib/utils/file_util.dart)、[`lib/utils/backup_restore.dart`](../lib/utils/backup_restore.dart)、[`lib/persistence/isar_backup.dart`](../lib/persistence/isar_backup.dart) |
 | 文案与实验入口 | [`lib/l10n/`](../lib/l10n/)、[`lib/pages/laboratory/`](../lib/pages/laboratory/) |
+| 月袋与每日光影 | [`lib/components/monthly_diary/`](../lib/components/monthly_diary/)、[`lib/pages/monthly_diary/`](../lib/pages/monthly_diary/)、[`lib/persistence/monthly_diary_repository.dart`](../lib/persistence/monthly_diary_repository.dart) |
 | 原生实现与测试 | [`rust/src/api/`](../rust/src/api/)、[`test/`](../test/) |
 
 本轮修复在 `codex/diary-data-reliability` 的独立 Git worktree 中完成。日常使用的原目录（例如 `D:/Code/Loong-s-Diary`）与 worktree 是不同的检出目录：它们共享 Git 提交和分支信息，但工作文件不会自动同步。继续开发或运行应用前，应在实际使用的目录核对提交；需要把修复带回原目录时，通过 Git 合并相应分支或提交，并保留原目录已有的未提交改动。
@@ -127,5 +129,6 @@ flutter run -d <device-id>
 - [离线天气与定位设计](superpowers/specs/2026-05-16-offline-weather-location-design.md)：2026-05-16 的已落地历史方案，示例代码保留原设计语境。
 - [离线天气与定位实施计划](superpowers/plans/2026-05-16-offline-weather-location.md)：顶部给出任务与提交的对应关系，未勾步骤不代表需要重新实现。
 - [关键词与备份可靠性设计](superpowers/specs/2026-11-09-data-reliability-design.md)及[实施与验证记录](superpowers/plans/2026-11-09-data-reliability.md)：记录修复范围、测试结果和剩余平台限制。
+- [月袋与每日光影设计](superpowers/specs/2026-11-09-monthly-memories-design.md)及[实施与验证记录](superpowers/plans/2026-11-09-monthly-memories.md)：用户选择的混合界面、按天分组与新 APK 的验证范围。
 
 后续完成设备验收、功能接通或发布安装包时，同步更新本页的日期、验证环境和范围。
